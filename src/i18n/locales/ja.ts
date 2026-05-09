@@ -1,9 +1,15 @@
 export default {
   auth: {
-    login: "ログイン",
-    loginTitle: "アカウントにログインする",
-    signUp: "新規登録",
-    signUpTitle: "アカウントを登録する",
+    login: {
+      action: "ログイン",
+      title: "アカウントにログインする",
+      message: "おかえりなさい！ 情報を入力してください。",
+    },
+    signUp: {
+      action: "新規登録",
+      title: "アカウントを登録する",
+      message: "データはあなたのもの。すぐに始められます。",
+    },
     logout: "ログアウト",
     success: "ログインしました",
     email: "メールアドレス",
@@ -14,5 +20,10 @@ export default {
     password: {
       min: "パスワードは{min}文字以上で入力してください",
     },
+  },
+  head: {
+    login: "ログイン",
+    signUp: "新規登録",
+    home: "マイページ",
   },
 }

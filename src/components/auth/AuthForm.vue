@@ -17,6 +17,7 @@ import {
   Card,
   CardAction,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -29,8 +30,9 @@ const { t } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
 const props = defineProps<{
-  mode: "login" | "signup"
+  mode: "login" | "signUp"
 }>()
+const baseI18n = `auth.${props.mode}`
 
 const formSchema = toTypedSchema(
   z.object({
@@ -66,7 +68,7 @@ const onSubmit = handleSubmit(async (data) => {
 })
 
 function switchMode() {
-  router.push({ name: props.mode === "login" ? "signup" : "login" })
+  router.push({ name: props.mode === "login" ? "signUp" : "login" })
 }
 </script>
 
@@ -74,11 +76,16 @@ function switchMode() {
   <Card>
     <CardHeader>
       <CardTitle>
-        {{ mode === "login" ? t("auth.loginTitle") : t("auth.signUpTitle") }}
+        {{ t(`${baseI18n}.title`) }}
       </CardTitle>
+      <CardDescription>
+        {{ t(`${baseI18n}.message`) }}
+      </CardDescription>
       <CardAction>
         <Button variant="link" @click="switchMode">
-          {{ mode === "login" ? t("auth.signUp") : t("auth.login") }}
+          {{
+            mode === "login" ? t(`auth.signUp.action`) : t(`auth.login.action`)
+          }}
         </Button>
       </CardAction>
     </CardHeader>
@@ -118,7 +125,7 @@ function switchMode() {
     </CardContent>
     <CardFooter>
       <Button type="submit" form="login-form" class="w-full">
-        {{ mode === "login" ? t("auth.login") : t("auth.signUp") }}
+        {{ t(`${baseI18n}.action`) }}
       </Button>
     </CardFooter>
   </Card>
