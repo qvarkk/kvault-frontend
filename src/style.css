@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -117,8 +116,20 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    cursor: default;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  button,
+  [role="button"],
+  a,
+  [role="menuitem"] {
+    cursor: pointer !important;
+  }
+  button *,
+  a *,
+  [role="menuitem"] * {
+    pointer-events: none;
   }
 }

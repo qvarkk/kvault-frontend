@@ -10,7 +10,6 @@ export default {
       title: "Создать аккаунт",
       message: "Ваши заметки - ваша крепость. Начните прямо сейчас.",
     },
-    logout: "Выход",
     success: "Успешный вход",
     email: "Эл. Почта",
     password: "Пароль",
@@ -25,5 +24,13 @@ export default {
     login: "Вход",
     signUp: "Регистрация",
     home: "Главная",
+  },
+  nav: {
+    home: "Главная",
+    notes: "Заметки",
+    files: "Файлы",
+    account: "Аккаунт",
+    settings: "Настройки",
+    logout: "Выход",
   },
 }

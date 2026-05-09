@@ -10,7 +10,6 @@ export default {
       title: "Create an account",
       message: "Your notes, your data. Get started in seconds.",
     },
-    logout: "Log out",
     success: "Successfully logged in",
     email: "Email",
     password: "Password",
@@ -25,5 +24,13 @@ export default {
     login: "Login",
     signUp: "Sign Up",
     home: "Home",
+  },
+  nav: {
+    home: "Home",
+    notes: "Notes",
+    files: "Files",
+    account: "Account",
+    settings: "Settings",
+    logout: "Log out",
   },
 }

@@ -10,7 +10,6 @@ export default {
       title: "アカウントを登録する",
       message: "データはあなたのもの。すぐに始められます。",
     },
-    logout: "ログアウト",
     success: "ログインしました",
     email: "メールアドレス",
     password: "パスワード",
@@ -25,5 +24,13 @@ export default {
     login: "ログイン",
     signUp: "新規登録",
     home: "マイページ",
+  },
+  nav: {
+    home: "マイページ",
+    notes: "ノート",
+    files: "ファイル",
+    account: "アカウント",
+    settings: "設定",
+    logout: "ログアウト",
   },
 }
