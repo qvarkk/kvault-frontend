@@ -11,4 +11,4 @@ export interface LoginPayload {
   password: string
 }
 
-export type RegisterPayload = LoginPayload
+export type SignupPayload = LoginPayload

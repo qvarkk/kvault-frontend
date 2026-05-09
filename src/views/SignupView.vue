@@ -5,6 +5,6 @@ import AuthLayout from "@/components/layout/AuthLayout.vue"
 
 <template>
   <AuthLayout>
-    <AuthForm mode="login" />
+    <AuthForm mode="signup" />
   </AuthLayout>
 </template>
