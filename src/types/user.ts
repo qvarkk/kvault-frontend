@@ -6,9 +6,9 @@ export interface User {
   createdAt: string
 }
 
-export interface UserAuthenticatePayload {
+export interface LoginPayload {
   email: string
   password: string
 }
 
-export type UserRegisterPayload = UserAuthenticatePayload
+export type RegisterPayload = LoginPayload
