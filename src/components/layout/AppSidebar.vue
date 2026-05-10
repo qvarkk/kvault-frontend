@@ -107,24 +107,27 @@ function logout() {
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <SidebarMenuButton
-                :tooltip="t('nav.account')"
-                class="flex justify-between py-5"
-              >
-                <div class="flex items-center justify-start gap-2">
-                  <Avatar class="w-6 h-6">
-                    <AvatarFallback
-                      class="bg-primary text-primary-foreground text-xs"
-                    >
-                      {{ auth.user?.email?.slice(0, 2).toUpperCase() }}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span v-if="isExpanded" class="truncate">{{
-                    auth.user?.email
-                  }}</span>
-                </div>
-                <ChevronsUpDown v-if="isExpanded" />
+            <!-- 
+              The only solution I came up with to keep the avatar
+              from shifting to the right in collapsed state.
+              Not clean, but gets the job done.
+            -->
+            <DropdownMenuTrigger
+              as-child
+              :style="!isExpanded ? 'padding: 4px !important' : ''"
+            >
+              <SidebarMenuButton :tooltip="t('nav.account')" class="py-5">
+                <Avatar class="w-6 h-6">
+                  <AvatarFallback
+                    class="bg-primary text-primary-foreground text-xs"
+                  >
+                    {{ auth.user?.email?.slice(0, 2).toUpperCase() }}
+                  </AvatarFallback>
+                </Avatar>
+                <span v-if="isExpanded" class="truncate">{{
+                  auth.user?.email
+                }}</span>
+                <ChevronsUpDown v-if="isExpanded" class="ml-auto" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent :class="!isMobile ? 'ml-2' : ''" side="top">
