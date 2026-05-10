@@ -128,8 +128,8 @@
     cursor: pointer !important;
   }
   button *,
-  a *,
-  [role="menuitem"] * {
+  [role="menuitem"] *,
+  .cursor-pointer * {
     pointer-events: none;
   }
 }

@@ -39,4 +39,14 @@ export default {
       detail: "サーバーに接続できません。接続状況を確認してください。",
     },
   },
+  home: {
+    greeting: "おかえりなさい",
+    subtitle: "前回の続きますはこちらです",
+    empty: "ノートはまだありません",
+    createFirst: "最初のノートを作成しましょう",
+    viewAll: "全てのノートを表示",
+  },
+  common: {
+    retry: "リトライ",
+  },
 }

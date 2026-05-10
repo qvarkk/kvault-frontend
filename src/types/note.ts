@@ -1,25 +1,25 @@
 import type { TagRef } from "./tag"
 
-export type ItemType = 'text' | 'url'
+export type NoteType = "text" | "url"
 
-export interface Item {
+export interface Note {
   id: string
   userId: string
   title: string
   content: string
-  type: ItemType
+  type: NoteType
   tags: TagRef[]
   updatedAt: string
   createdAt: string
 }
 
-export interface ItemCreatePayload {
+export interface NoteCreatePayload {
   title: string
   content?: string
-  type: ItemType
+  type: NoteType
 }
 
-export interface ItemUpdatePayload {
+export interface NoteUpdatePayload {
   title?: string
   content?: string
 }

@@ -39,4 +39,14 @@ export default {
       detail: "Could not reach the server. Please check your connection.",
     },
   },
+  home: {
+    greeting: "Welcome back",
+    subtitle: "Here is where you left off",
+    empty: "No notes yet",
+    createFirst: "Create your first note",
+    viewAll: "View all notes",
+  },
+  common: {
+    retry: "Retry",
+  },
 }
