@@ -1,6 +1,7 @@
-import axios, { AxiosError } from "axios";
-import { camelizeKeys } from "./camelize";
-import type { ApiError } from "@/types";
+import axios, { AxiosError } from "axios"
+import { camelizeKeys } from "./camelize"
+import type { ApiError } from "@/types"
+import i18n from "@/i18n"
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -28,9 +29,14 @@ http.interceptors.response.use(
   (error: AxiosError<ApiError>) => {
     if (error.response?.data) {
       error.response.data = camelizeKeys(error.response.data) as ApiError
+      return Promise.reject(error.response.data)
     }
 
-    return Promise.reject(error.response?.data ?? error)
+    return Promise.reject({
+      title: i18n.global.t("errors.network.title"),
+      detail: i18n.global.t("errors.network.detail"),
+      status: 0,
+    } as ApiError)
   },
 )
 

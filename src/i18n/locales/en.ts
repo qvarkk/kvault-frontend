@@ -33,4 +33,10 @@ export default {
     settings: "Settings",
     logout: "Log out",
   },
+  errors: {
+    network: {
+      title: "Network Error",
+      detail: "Could not reach the server. Please check your connection.",
+    },
+  },
 }

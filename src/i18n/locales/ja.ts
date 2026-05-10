@@ -33,4 +33,10 @@ export default {
     settings: "設定",
     logout: "ログアウト",
   },
+  errors: {
+    network: {
+      title: "ネットワークエラー",
+      detail: "サーバーに接続できません。接続状況を確認してください。",
+    },
+  },
 }
