@@ -47,6 +47,20 @@ export default {
     createFirst: "Создайте свою первую заметку",
     viewAll: "Все заметки",
   },
+  notes: {
+    search: "Поиск заметок...",
+    sort: {
+      updatedAt: "Последнее обновление",
+      createdAt: "Время создания",
+      title: "Заголовок",
+    },
+    tags: {
+      filter: "Теги",
+      search: "Поиск тегов...",
+      none: "Ничего не найдено",
+      clear: "Очистить выбор",
+    },
+  },
   common: {
     retry: "Повторить",
   },

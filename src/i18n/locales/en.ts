@@ -46,6 +46,20 @@ export default {
     createFirst: "Create your first note",
     viewAll: "View all notes",
   },
+  notes: {
+    search: "Search notes...",
+    sort: {
+      updatedAt: "Last updated",
+      createdAt: "Date created",
+      title: "Title",
+    },
+    tags: {
+      filter: "Tags",
+      search: "Search tags...",
+      none: "No tags found",
+      clear: "Clear all",
+    },
+  },
   common: {
     retry: "Retry",
   },

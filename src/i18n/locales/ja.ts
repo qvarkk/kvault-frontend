@@ -46,6 +46,20 @@ export default {
     createFirst: "最初のノートを作成しましょう",
     viewAll: "全てのノートを表示",
   },
+  notes: {
+    search: "ノートを検索...",
+    sort: {
+      updatedAt: "更新日時",
+      createdAt: "作成日時",
+      title: "タイトル",
+    },
+    tags: {
+      filter: "タグ",
+      search: "タグを検索...",
+      none: "タグがみつかりません",
+      clear: "クリア",
+    },
+  },
   common: {
     retry: "リトライ",
   },

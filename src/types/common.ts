@@ -4,6 +4,6 @@ export interface Listed<T> {
 
 export interface Paginated<T> extends Listed<T> {
   page: number
-  page_size: number
+  pageSize: number
   total: number
 }
