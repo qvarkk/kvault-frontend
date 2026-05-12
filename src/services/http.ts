@@ -11,6 +11,10 @@ const http = axios.create({
   },
 })
 
+http.defaults.paramsSerializer = {
+  indexes: null,
+}
+
 http.interceptors.request.use((config) => {
   const token = localStorage.getItem("token")
 

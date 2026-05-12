@@ -9,34 +9,18 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Button } from "../ui/button"
-import type { AcceptableValue } from "reka-ui"
 import { useI18n } from "vue-i18n"
 import TagFilter from "./TagFilter.vue"
 
 const { t } = useI18n()
 
-const props = defineProps<{
-  query: string
-  sortBy: string
-  orderBy: string
-  tagIds: string[]
-}>()
-
-const emit = defineEmits<{
-  "update:query": [value: string]
-  "update:sortBy": [value: string]
-  "update:orderBy": [value: string]
-  "update:tagIds": [value: string[]]
-}>()
-
-function handleSortUpdate(value: AcceptableValue) {
-  if (typeof value === "string") {
-    emit("update:sortBy", value)
-  }
-}
+const query = defineModel<string>("query", { default: "" })
+const sortBy = defineModel<string>("sortBy", { default: "" })
+const orderBy = defineModel<string>("orderBy", { default: "" })
+const tagIds = defineModel<string[]>("tagIds", { default: [] })
 
 function toggleOrder() {
-  emit("update:orderBy", props.orderBy === "DESC" ? "ASC" : "DESC")
+  orderBy.value = orderBy.value === "DESC" ? "ASC" : "DESC"
 }
 </script>
 
@@ -46,12 +30,7 @@ function toggleOrder() {
       <Search
         class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none"
       />
-      <Input
-        :value="query"
-        @input="emit('update:query', ($event.target as HTMLInputElement).value)"
-        :placeholder="t('notes.search')"
-        class="pl-9"
-      />
+      <Input v-model="query" :placeholder="t('notes.search')" class="pl-9" />
     </div>
 
     <div class="flex items-center gap-2">
@@ -60,7 +39,7 @@ function toggleOrder() {
         <ArrowDown v-else class="w-4 h-4" />
       </Button>
 
-      <Select :model-value="sortBy" @update:model-value="handleSortUpdate">
+      <Select v-model:model-value="sortBy">
         <SelectTrigger class="w-40 flex-1">
           <SelectValue />
         </SelectTrigger>
@@ -76,7 +55,7 @@ function toggleOrder() {
       </Select>
 
       <div class="flex-1">
-        <TagFilter :model-value="tagIds" />
+        <TagFilter v-model:tag-ids="tagIds" />
       </div>
     </div>
   </div>

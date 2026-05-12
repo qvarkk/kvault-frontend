@@ -19,7 +19,7 @@ const orderBy = ref("DESC")
 const tagIds = ref<string[]>([])
 const createModalOpen = ref(false)
 
-const { notes, loading, loadingMore, error, hasMore, fetchNotes, loadMore } =
+const { notes, loading, loadingMore, error, fetchNotes, loadMore } =
   useInfiniteNotes()
 
 const sentinel = ref<HTMLElement | null>(null)
@@ -78,10 +78,13 @@ onMounted(loadNotes)
       </div>
 
       <div v-else>
-        <div v-if="notes.length === 0">
+        <div
+          v-if="notes.length === 0"
+          class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
+        >
           <NotebookPen class="w-12 h-12" />
           <p>{{ t("notes.empty") }}</p>
-          <Button @click="">
+          <Button @click="openCreateModal">
             {{ t("notes.createFirst") }}
           </Button>
         </div>

@@ -13,13 +13,6 @@ import { tagsService } from "@/services/tags"
 
 const PAGE_SIZE = 20
 
-const props = defineProps<{
-  modelValue: string[]
-}>()
-const emit = defineEmits<{
-  "update:modelValue": [value: string[]]
-}>()
-
 const { t } = useI18n()
 const { tags, loading, error, fetchTags } = useTags()
 
@@ -29,7 +22,7 @@ const loadingMore = ref(false)
 const sentinel = ref<HTMLElement | null>(null)
 
 const search = ref("")
-const selected = ref<string[]>(props.modelValue)
+const tagIds = defineModel<string[]>("tagIds", { default: [] })
 
 async function fetch() {
   page.value = 1
@@ -61,19 +54,17 @@ function retry() {
 }
 
 function toggleTag(id: string) {
-  selected.value = selected.value.includes(id)
-    ? selected.value.filter((t) => t !== id)
-    : [...selected.value, id]
-  emit("update:modelValue", selected.value)
+  tagIds.value = tagIds.value.includes(id)
+    ? tagIds.value.filter((t) => t !== id)
+    : [...tagIds.value, id]
 }
 
 function isSelected(id: string) {
-  return selected.value.includes(id)
+  return tagIds.value.includes(id)
 }
 
 function clear() {
-  selected.value = []
-  emit("update:modelValue", selected.value)
+  tagIds.value = []
 }
 
 useIntersectionObserver(sentinel, ([entry]) => {
@@ -89,8 +80,8 @@ onMounted(fetch)
       <Button variant="outline" class="w-full gap-2">
         <TagIcon class="w-4 h-4" />
         <span>{{ t("notes.tags.filter") }}</span>
-        <Badge v-if="selected.length > 0" variant="secondary">
-          {{ selected.length }}
+        <Badge v-if="tagIds.length > 0" variant="secondary">
+          {{ tagIds.length }}
         </Badge>
       </Button>
     </PopoverTrigger>
