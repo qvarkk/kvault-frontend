@@ -5,4 +5,7 @@ export const notesService = {
   list(params?: Record<string, unknown>) {
     return http.get<Paginated<Note>>("/items", { params })
   },
+  createText(title: string) {
+    return http.post<Note>("/items", { title, type: "text" })
+  },
 }

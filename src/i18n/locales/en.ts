@@ -38,16 +38,23 @@ export default {
       title: "Network Error",
       detail: "Could not reach the server. Please check your connection.",
     },
+    internal: {
+      title: "Internal Error",
+      detail: "Please try again later.",
+    },
   },
   home: {
     greeting: "Welcome back",
     subtitle: "Here is where you left off",
-    empty: "No notes yet",
-    createFirst: "Create your first note",
     viewAll: "View all notes",
   },
   notes: {
     search: "Search notes...",
+    empty: "No notes yet",
+    createFirst: "Create your first note",
+    created: "Note created",
+    createTitle: "New note",
+    titlePlaceholder: "Note title...",
     sort: {
       updatedAt: "Last updated",
       createdAt: "Date created",
@@ -62,5 +69,8 @@ export default {
   },
   common: {
     retry: "Retry",
+    cancel: "Cancel",
+    create: "Create",
+    creating: "Creating...",
   },
 }

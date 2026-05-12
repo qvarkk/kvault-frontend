@@ -1,39 +1,114 @@
 <script setup lang="ts">
 import AppLayout from "@/components/layout/AppLayout.vue"
+import CreateNoteModal from "@/components/notes/CreateNoteModal.vue"
+import NoteCard from "@/components/notes/NoteCard.vue"
+import NoteSkeleton from "@/components/notes/NoteSkeleton.vue"
 import NotesToolbar from "@/components/notes/NotesToolbar.vue"
-import { useNotes } from "@/composables/useNotes"
-import { watchDebounced } from "@vueuse/core"
-import { ref, watch } from "vue"
+import { Button } from "@/components/ui/button"
+import { useInfiniteNotes } from "@/composables/useInfiniteNotes"
+import { useIntersectionObserver, watchDebounced } from "@vueuse/core"
+import { Loader2, NotebookPen, Plus, RefreshCw } from "lucide-vue-next"
+import { computed, onMounted, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 
 const query = ref("")
 const sortBy = ref("updated_at")
 const orderBy = ref("DESC")
 const tagIds = ref<string[]>([])
+const createModalOpen = ref(false)
 
-const { notes, loading, error, fetchNotes } = useNotes()
+const { notes, loading, loadingMore, error, hasMore, fetchNotes, loadMore } =
+  useInfiniteNotes()
+
+const sentinel = ref<HTMLElement | null>(null)
+
+const params = computed(() => ({
+  q: query.value,
+  sort_by: sortBy.value,
+  order_by: orderBy.value,
+  tag_ids: tagIds.value,
+  page_size: 20,
+}))
+
+async function loadNotes() {
+  await fetchNotes(params.value)
+}
+
+function openCreateModal() {
+  createModalOpen.value = true
+}
+
+useIntersectionObserver(sentinel, ([entry]) => {
+  if (entry?.isIntersecting) loadMore(params.value)
+})
 
 watchDebounced(query, loadNotes, { debounce: 400 })
 watch([sortBy, orderBy, tagIds], loadNotes)
-
-async function loadNotes() {
-  await fetchNotes({
-    q: query.value,
-    sort_by: sortBy.value,
-    order_by: orderBy.value,
-    tag_ids: tagIds.value,
-    page_size: 20,
-  })
-}
+onMounted(loadNotes)
 </script>
 
 <template>
   <AppLayout>
-    <h1>Notes</h1>
-    <NotesToolbar
-      v-model:query="query"
-      v-model:order-by="orderBy"
-      v-model:sort-by="sortBy"
-      v-model:tag-ids="tagIds"
-    />
+    <div class="flex flex-col gap-4 p-6">
+      <NotesToolbar
+        v-model:query="query"
+        v-model:sortBy="sortBy"
+        v-model:orderBy="orderBy"
+        v-model:tagIds="tagIds"
+      />
+
+      <div
+        v-if="loading"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6"
+      >
+        <NoteSkeleton v-for="n in 20" :key="n" />
+      </div>
+
+      <div
+        v-else-if="error"
+        class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
+      >
+        <p class="text-destructive">{{ error.detail }}</p>
+        <Button variant="outline" @click="loadNotes">
+          <RefreshCw class="w-4 h-4 mr-2" />
+          {{ t("common.retry") }}
+        </Button>
+      </div>
+
+      <div v-else>
+        <div v-if="notes.length === 0">
+          <NotebookPen class="w-12 h-12" />
+          <p>{{ t("notes.empty") }}</p>
+          <Button @click="">
+            {{ t("notes.createFirst") }}
+          </Button>
+        </div>
+
+        <div
+          v-else
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
+          <NoteCard v-for="note in notes" :key="note.id" :note="note" />
+        </div>
+
+        <div ref="sentinel" class="h-1" />
+
+        <div v-if="loadingMore" class="flex justify-center py-4">
+          <Loader2 class="w-4 h-4 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    </div>
+
+    <Button
+      class="fixed bottom-6 right-6 rounded-full w-12 h-12 shadow-lg"
+      size="icon"
+      @click="openCreateModal"
+    >
+      <Plus class="w-5 h-5 pointer-events-none" />
+    </Button>
   </AppLayout>
+
+  <CreateNoteModal v-model:open="createModalOpen" />
 </template>

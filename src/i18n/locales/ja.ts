@@ -38,16 +38,23 @@ export default {
       title: "ネットワークエラー",
       detail: "サーバーに接続できません。接続状況を確認してください。",
     },
+    internal: {
+      title: "内部エラー",
+      detail: "しばらくしてからもう一度お試しください",
+    },
   },
   home: {
     greeting: "おかえりなさい",
     subtitle: "前回の続きますはこちらです",
-    empty: "ノートはまだありません",
-    createFirst: "最初のノートを作成しましょう",
     viewAll: "全てのノートを表示",
   },
   notes: {
     search: "ノートを検索...",
+    empty: "ノートはまだありません",
+    createFirst: "最初のノートを作成しましょう",
+    created: "ノートを作成しました",
+    createTitle: "新規ノート",
+    titlePlaceholder: "ノートのタイトル...",
     sort: {
       updatedAt: "更新日時",
       createdAt: "作成日時",
@@ -62,5 +69,8 @@ export default {
   },
   common: {
     retry: "リトライ",
+    cancel: "キャンセル",
+    create: "作成",
+    creating: "作成中...",
   },
 }

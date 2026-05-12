@@ -55,6 +55,11 @@ function toggleOrder() {
     </div>
 
     <div class="flex items-center gap-2">
+      <Button variant="outline" size="icon" @click="toggleOrder">
+        <ArrowUp v-if="orderBy === 'ASC'" class="w-4 h-4" />
+        <ArrowDown v-else class="w-4 h-4" />
+      </Button>
+
       <Select :model-value="sortBy" @update:model-value="handleSortUpdate">
         <SelectTrigger class="w-40 flex-1">
           <SelectValue />
@@ -73,11 +78,6 @@ function toggleOrder() {
       <div class="flex-1">
         <TagFilter :model-value="tagIds" />
       </div>
-
-      <Button variant="outline" size="icon" @click="toggleOrder">
-        <ArrowUp v-if="orderBy === 'ASC'" class="w-4 h-4" />
-        <ArrowDown v-else class="w-4 h-4" />
-      </Button>
     </div>
   </div>
 </template>

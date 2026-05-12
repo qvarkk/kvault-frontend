@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import "vue-sonner/style.css"
-import { Toaster } from "vue-sonner"
 import LocaleThemeSwitch from "../common/LocaleThemeSwitch.vue"
 </script>
 
@@ -15,5 +13,4 @@ import LocaleThemeSwitch from "../common/LocaleThemeSwitch.vue"
       </div>
     </div>
   </main>
-  <Toaster />
 </template>
