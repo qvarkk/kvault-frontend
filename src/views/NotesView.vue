@@ -40,6 +40,10 @@ function openCreateModal() {
   createModalOpen.value = true
 }
 
+function handleNoteDeleted(id: string) {
+  notes.value = notes.value.filter((n) => n.id !== id)
+}
+
 useIntersectionObserver(sentinel, ([entry]) => {
   if (entry?.isIntersecting) loadMore(params.value)
 })
@@ -85,7 +89,7 @@ onMounted(loadNotes)
           <NotebookPen class="w-12 h-12" />
           <p>{{ t("notes.empty") }}</p>
           <Button @click="openCreateModal">
-            {{ t("notes.createFirst") }}
+            {{ t("notes.create.first") }}
           </Button>
         </div>
 
@@ -93,7 +97,13 @@ onMounted(loadNotes)
           v-else
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
-          <NoteCard v-for="note in notes" :key="note.id" :note="note" />
+          <NoteCard
+            v-for="note in notes"
+            :key="note.id"
+            :note="note"
+            :include-menu="true"
+            @deleted="handleNoteDeleted"
+          />
         </div>
 
         <div ref="sentinel" class="h-1" />

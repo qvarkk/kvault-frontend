@@ -127,9 +127,4 @@
   [role="menuitem"] {
     cursor: pointer !important;
   }
-  button *,
-  [role="menuitem"] *,
-  .cursor-pointer * {
-    pointer-events: none;
-  }
 }

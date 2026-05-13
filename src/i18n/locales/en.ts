@@ -51,10 +51,17 @@ export default {
   notes: {
     search: "Search notes...",
     empty: "No notes yet",
-    createFirst: "Create your first note",
-    created: "Note created",
-    createTitle: "New note",
-    titlePlaceholder: "Note title...",
+    create: {
+      title: "New note",
+      placeholder: "Note title...",
+      created: "Note created",
+      first: "Create your first note",
+    },
+    delete: {
+      title: "Delete note?",
+      description: "This note will be moved to trash.",
+      deleted: "Note moved to trash",
+    },
     sort: {
       updatedAt: "Last updated",
       createdAt: "Date created",
@@ -72,5 +79,6 @@ export default {
     cancel: "Cancel",
     create: "Create",
     creating: "Creating...",
+    delete: "Delete",
   },
 }

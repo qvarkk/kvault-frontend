@@ -51,10 +51,17 @@ export default {
   notes: {
     search: "ノートを検索...",
     empty: "ノートはまだありません",
-    createFirst: "最初のノートを作成しましょう",
-    created: "ノートを作成しました",
-    createTitle: "新規ノート",
-    titlePlaceholder: "ノートのタイトル...",
+    create: {
+      title: "新規ノート",
+      placeholder: "ノートのタイトル...",
+      created: "ノートを作成しました",
+      first: "最初のノートを作成しましょう",
+    },
+    delete: {
+      title: "ノートを削除しますか？",
+      description: "このノートはゴミ箱に移動されます。",
+      deleted: "ノートをゴミ箱に移動しました",
+    },
     sort: {
       updatedAt: "更新日時",
       createdAt: "作成日時",
@@ -72,5 +79,6 @@ export default {
     cancel: "キャンセル",
     create: "作成",
     creating: "作成中...",
+    delete: "削除",
   },
 }

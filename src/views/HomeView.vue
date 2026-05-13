@@ -3,8 +3,6 @@ import AppLayout from "@/components/layout/AppLayout.vue"
 import NoteCard from "@/components/notes/NoteCard.vue"
 import NoteSkeleton from "@/components/notes/NoteSkeleton.vue"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 import { useNotes } from "@/composables/useNotes"
 import { useHead } from "@vueuse/head"
 import { NotebookPen, RefreshCw } from "lucide-vue-next"
@@ -58,12 +56,17 @@ onMounted(fetch)
         <NotebookPen class="w-12 h-12" />
         <p>{{ t("notes.empty") }}</p>
         <Button @click="router.push({ name: 'notes' })">
-          {{ t("notes.createFirst") }}
+          {{ t("notes.create.first") }}
         </Button>
       </div>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <NoteCard v-for="note in notes" :key="note.id" :note="note" />
+        <NoteCard
+          v-for="note in notes"
+          :key="note.id"
+          :note="note"
+          :include-menu="false"
+        />
       </div>
 
       <div v-if="notes.length > 0" class="flex justify-center">

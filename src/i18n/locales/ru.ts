@@ -52,10 +52,17 @@ export default {
   notes: {
     search: "Поиск заметок...",
     empty: "Пока что нет заметок",
-    createFirst: "Создайте свою первую заметку",
-    created: "Заметка создана",
-    createTitle: "Новая заметка",
-    titlePlaceholder: "Заголовок заметки...",
+    create: {
+      title: "Новая заметка",
+      placeholder: "Заголовок заметки...",
+      created: "Заметка создана",
+      first: "Создайте свою первую заметку",
+    },
+    delete: {
+      title: "Удалить заметку?",
+      description: "Эта заметка будет перенесена в корзину.",
+      deleted: "Заметка перенесена в корзину",
+    },
     sort: {
       updatedAt: "Последнее обновление",
       createdAt: "Время создания",
@@ -73,5 +80,6 @@ export default {
     cancel: "Отмена",
     create: "Создать",
     creating: "Создание...",
+    delete: "Удалить",
   },
 }

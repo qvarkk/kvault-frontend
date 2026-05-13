@@ -28,7 +28,7 @@ async function handleCreate() {
 
   try {
     const response = await notesService.createText(title.value.trim())
-    toast.success(t("notes.created"))
+    toast.success(t("notes.create.created"))
     open.value = false
     title.value = ""
     router.push({ name: "note", params: { id: response.data.id } })
@@ -49,11 +49,11 @@ async function handleCreate() {
   <Dialog v-model:open="open">
     <DialogContent aria-describedby="">
       <DialogHeader>
-        <DialogTitle>{{ t("notes.createTitle") }}</DialogTitle>
+        <DialogTitle>{{ t("notes.create.title") }}</DialogTitle>
       </DialogHeader>
       <Input
         v-model="title"
-        :placeholder="t('notes.titlePlaceholder')"
+        :placeholder="t('notes.create.placeholder')"
         @keydown.enter="handleCreate"
       />
       <DialogFooter>
