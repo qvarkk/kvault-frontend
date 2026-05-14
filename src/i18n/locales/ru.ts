@@ -43,6 +43,9 @@ export default {
       title: "Внутренняя ошибка",
       detail: "Пожалуйста, попробуйте еще раз позже.",
     },
+    notFound: {
+      message: "Не найдено",
+    },
   },
   home: {
     greeting: "С возвращением",
@@ -50,6 +53,7 @@ export default {
     viewAll: "Все заметки",
   },
   notes: {
+    backToNotes: "Назад к заметкам",
     search: "Поиск заметок...",
     empty: "Пока что нет заметок",
     create: {
@@ -57,6 +61,12 @@ export default {
       placeholder: "Заголовок заметки...",
       created: "Заметка создана",
       first: "Создайте свою первую заметку",
+    },
+    update: {
+      saved: "Заметка сохранена",
+      unsaved: "Не сохранено",
+      autotag: "Автотеги",
+      titleChanged: "Заголовок был успешно изменен",
     },
     delete: {
       title: "Удалить заметку?",
@@ -69,10 +79,21 @@ export default {
       title: "Заголовок",
     },
     tags: {
+      add: "Добавить",
+      create: 'Создать "{name}"',
       filter: "Теги",
       search: "Поиск тегов...",
       none: "Ничего не найдено",
       clear: "Очистить выбор",
+      generate: "Сгенерировать",
+    },
+    editor: {
+      exportPdfTitle: "Экпорт в PDF",
+      exportPdfButton: "Экспорт",
+      exportPdfSuccess: "PDF успешно экспортирован",
+      exportPdfErrorTitle: "Внутренняя ошибка",
+      exportPdfErrorDescription:
+        "Неизвестная ошибка произошла при экспорте PDF",
     },
   },
   common: {
@@ -80,6 +101,7 @@ export default {
     cancel: "Отмена",
     create: "Создать",
     creating: "Создание...",
+    saving: "Сохранение...",
     delete: "Удалить",
   },
 }

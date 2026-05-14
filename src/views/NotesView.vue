@@ -55,7 +55,7 @@ onMounted(loadNotes)
 
 <template>
   <AppLayout>
-    <div class="flex flex-col gap-4 p-6">
+    <div class="flex flex-col gap-4 container">
       <NotesToolbar
         v-model:query="query"
         v-model:sortBy="sortBy"
@@ -65,14 +65,14 @@ onMounted(loadNotes)
 
       <div
         v-if="loading"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         <NoteSkeleton v-for="n in 20" :key="n" />
       </div>
 
       <div
         v-else-if="error"
-        class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
+        class="flex flex-col items-center justify-center gap-4 pt-24 pb-8 text-muted-foreground"
       >
         <p class="text-destructive">{{ error.detail }}</p>
         <Button variant="outline" @click="loadNotes">
@@ -84,7 +84,7 @@ onMounted(loadNotes)
       <div v-else>
         <div
           v-if="notes.length === 0"
-          class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
+          class="flex flex-col items-center justify-center gap-4 pt-24 pb-8 text-muted-foreground"
         >
           <NotebookPen class="w-12 h-12" />
           <p>{{ t("notes.empty") }}</p>

@@ -1,0 +1,129 @@
+<script setup lang="ts">
+import { ExportPDF, PreviewThemeSwitch, Emoji } from "@vavt/v3-extension"
+import "@vavt/v3-extension/lib/asset/ExportPDF.css"
+import "@vavt/v3-extension/lib/asset/PreviewThemeSwitch.css"
+import "@vavt/v3-extension/lib/asset/Emoji.css"
+
+import { useMediaQuery } from "@vueuse/core"
+import {
+  MdEditor,
+  type PreviewThemes,
+  type Themes,
+  type ToolbarNames,
+} from "md-editor-v3"
+import { computed, ref } from "vue"
+import { useI18n } from "vue-i18n"
+import { toast } from "vue-sonner"
+import { Smile } from "lucide-vue-next"
+import { Button } from "../ui/button"
+
+const props = defineProps<{
+  theme: Themes
+  language: string
+}>()
+
+const content = defineModel<string>("content")
+
+const { t } = useI18n()
+const isMobile = useMediaQuery("(max-width: 768px)")
+
+const mobileToolbars: ToolbarNames[] = [
+  "bold",
+  "italic",
+  "-",
+  "unorderedList",
+  "task",
+  "-",
+  "revoke",
+  "next",
+  "=",
+  "pageFullscreen",
+  "previewOnly",
+  1,
+]
+
+const desktopToolbars: ToolbarNames[] = [
+  2,
+  "-",
+  "bold",
+  "underline",
+  "italic",
+  "strikeThrough",
+  "-",
+  "title",
+  "sub",
+  "sup",
+  "quote",
+  "unorderedList",
+  "orderedList",
+  "task",
+  "-",
+  "codeRow",
+  "code",
+  "link",
+  "image",
+  "table",
+  "mermaid",
+  "katex",
+  "-",
+  "revoke",
+  "next",
+  "=",
+  "pageFullscreen",
+  "preview",
+  "catalog",
+  "-",
+  0,
+  1,
+]
+
+const toolbars = computed(() =>
+  isMobile.value ? mobileToolbars : desktopToolbars,
+)
+
+const previewTheme = ref<PreviewThemes>("default")
+
+function handlePdfExportSuccess() {
+  toast.success(t("notes.editor.exportPdfSuccess"))
+}
+
+function handlePdfExportError(err: unknown) {
+  toast.error(
+    t("notes.editor.exportPdfErrorTitle", {
+      description: t("notes.editor.exportPdfErrorDescription"),
+    }),
+  )
+  console.log(err)
+}
+</script>
+
+<template>
+  <MdEditor
+    v-model="content"
+    :theme="theme"
+    :toolbars="toolbars"
+    :preview="!isMobile"
+    :preview-theme="previewTheme"
+    :language="language"
+    code-theme="github"
+    no-upload-img
+    style="height: 100% !important"
+  >
+    <template #defToolbars>
+      <ExportPDF
+        :modelValue="content"
+        :title="t('notes.editor.exportPdfTitle')"
+        :modal-title="t('notes.editor.exportPdfTitle')"
+        :export-btn-text="t('notes.editor.exportPdfButton')"
+        @success="handlePdfExportSuccess"
+        @error="handlePdfExportError"
+      />
+      <PreviewThemeSwitch v-model="previewTheme" />
+      <Emoji>
+        <template #trigger>
+          <Smile class="size-4" />
+        </template>
+      </Emoji>
+    </template>
+  </MdEditor>
+</template>

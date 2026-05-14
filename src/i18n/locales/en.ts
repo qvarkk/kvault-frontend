@@ -42,6 +42,9 @@ export default {
       title: "Internal Error",
       detail: "Please try again later.",
     },
+    notFound: {
+      message: "Not found",
+    },
   },
   home: {
     greeting: "Welcome back",
@@ -49,6 +52,7 @@ export default {
     viewAll: "View all notes",
   },
   notes: {
+    backToNotes: "Back to notes",
     search: "Search notes...",
     empty: "No notes yet",
     create: {
@@ -56,6 +60,12 @@ export default {
       placeholder: "Note title...",
       created: "Note created",
       first: "Create your first note",
+    },
+    update: {
+      saved: "Note saved",
+      unsaved: "Unsaved",
+      autotag: "Autotag",
+      titleChanged: "Title was changed successfully",
     },
     delete: {
       title: "Delete note?",
@@ -68,10 +78,20 @@ export default {
       title: "Title",
     },
     tags: {
+      add: "Add",
+      create: 'Create "{name}"',
       filter: "Tags",
       search: "Search tags...",
       none: "No tags found",
       clear: "Clear all",
+      generate: "Generate",
+    },
+    editor: {
+      exportPdfTitle: "Export as PDF",
+      exportPdfButton: "Export",
+      exportPdfSuccess: "PDF exported sucessfully",
+      exportPdfErrorTitle: "Unexpected error",
+      exportPdfErrorDescription: "Unknown error occured while exporting PDF",
     },
   },
   common: {
@@ -79,6 +99,7 @@ export default {
     cancel: "Cancel",
     create: "Create",
     creating: "Creating...",
+    saving: "Saving...",
     delete: "Delete",
   },
 }

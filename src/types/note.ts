@@ -25,5 +25,5 @@ export interface NoteUpdatePayload {
 }
 
 export interface BindTagPayload {
-  tagId: string
+  tag_id: string
 }

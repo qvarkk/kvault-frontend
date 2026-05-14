@@ -1,10 +1,22 @@
 import { createApp } from "vue"
 import { createPinia } from "pinia"
 import { createHead } from "@vueuse/head"
+import { config } from "md-editor-v3"
+import ru from "@vavt/cm-extension/dist/locale/ru"
+import JP_JP from "@vavt/cm-extension/dist/locale/jp-JP"
 
 import App from "./App.vue"
 import router from "./router"
 import i18n from "./i18n"
+
+config({
+  editorConfig: {
+    languageUserDefined: {
+      ru: ru,
+      jp: JP_JP,
+    },
+  },
+})
 
 const appName = import.meta.env.VITE_APP_NAME ?? "kvault"
 const head = createHead({

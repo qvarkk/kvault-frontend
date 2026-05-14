@@ -9,7 +9,7 @@ import AppHeader from "./AppHeader.vue"
     <AppSidebar />
     <div class="flex flex-col flex-1">
       <AppHeader />
-      <main class="flex-1 p-4">
+      <main class="flex justify-center flex-1 p-4">
         <slot />
       </main>
     </div>

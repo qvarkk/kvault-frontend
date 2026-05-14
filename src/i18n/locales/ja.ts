@@ -42,6 +42,9 @@ export default {
       title: "内部エラー",
       detail: "しばらくしてからもう一度お試しください",
     },
+    notFound: {
+      message: "見つかりませんでした",
+    },
   },
   home: {
     greeting: "おかえりなさい",
@@ -49,6 +52,7 @@ export default {
     viewAll: "全てのノートを表示",
   },
   notes: {
+    backToNotes: "ノート一覧に戻る",
     search: "ノートを検索...",
     empty: "ノートはまだありません",
     create: {
@@ -56,6 +60,12 @@ export default {
       placeholder: "ノートのタイトル...",
       created: "ノートを作成しました",
       first: "最初のノートを作成しましょう",
+    },
+    update: {
+      saved: "保存しました",
+      unsaved: "未保存",
+      autotag: "自動タグ生成",
+      titleChanged: "タイトルを正常に変更しました",
     },
     delete: {
       title: "ノートを削除しますか？",
@@ -68,10 +78,21 @@ export default {
       title: "タイトル",
     },
     tags: {
+      add: "追加",
+      create: "「{name}」を作成",
       filter: "タグ",
       search: "タグを検索...",
       none: "タグがみつかりません",
       clear: "クリア",
+      generate: "生成",
+    },
+    editor: {
+      exportPdfTitle: "PDFとしてエクスポート",
+      exportPdfButton: "エクスポート",
+      exportPdfSuccess: "PDFを正常にエクスポートしました",
+      exportPdfErrorTitle: "予期しないエラー",
+      exportPdfErrorDescription:
+        "PDFのエクスポート中に不明なエラーが発生しました",
     },
   },
   common: {
@@ -79,6 +100,7 @@ export default {
     cancel: "キャンセル",
     create: "作成",
     creating: "作成中...",
+    saving: "保存中...",
     delete: "削除",
   },
 }

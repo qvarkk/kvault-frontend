@@ -27,14 +27,14 @@ onMounted(fetch)
   <AppLayout>
     <div
       v-if="loading"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 container"
     >
       <NoteSkeleton v-for="n in 9" :key="n" />
     </div>
 
     <div
       v-else-if="error"
-      class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
+      class="flex flex-col items-center justify-center gap-4 pt-24 pb-8 text-muted-foreground container"
     >
       <p class="text-destructive">{{ error.detail }}</p>
       <Button variant="outline" @click="fetch">
@@ -43,7 +43,7 @@ onMounted(fetch)
       </Button>
     </div>
 
-    <div v-else class="flex flex-col gap-6 p-6">
+    <div v-else class="flex flex-col gap-6 container">
       <div>
         <h1 class="text-2xl font-bold">{{ t("home.greeting") }}</h1>
         <p class="text-muted-foreground">{{ t("home.subtitle") }}</p>
@@ -51,7 +51,7 @@ onMounted(fetch)
 
       <div
         v-if="notes.length === 0"
-        class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
+        class="flex flex-col items-center justify-center gap-4 pt-24 pb-8 text-muted-foreground"
       >
         <NotebookPen class="w-12 h-12" />
         <p>{{ t("notes.empty") }}</p>
