@@ -11,6 +11,8 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@fontsource/geist": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "@tailwindcss/vite": "^4.3.0",
     "@vavt/cm-extension": "^1.11.2",
     "@vavt/v3-extension": "^4.0.0",
