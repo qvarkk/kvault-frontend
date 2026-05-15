@@ -6,8 +6,11 @@ export const authService = {
     return http.post<User>("/auth/refresh")
   },
 
-  updatePassword(password: string) {
-    return http.patch("/auth/account", { password })
+  updatePassword(oldPassword: string, newPassword: string) {
+    return http.patch("/auth/account", {
+      old_password: oldPassword,
+      new_password: newPassword,
+    })
   },
 
   deleteAccount(password: string) {

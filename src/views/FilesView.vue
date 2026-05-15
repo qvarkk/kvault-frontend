@@ -123,7 +123,12 @@ async function handleDelete(id: string) {
     files.value = files.value.filter((f) => f.id !== id)
     toast.success(t("files.delete.deleted"))
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
   }
 }
 
