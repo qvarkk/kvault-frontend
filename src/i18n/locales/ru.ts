@@ -157,6 +157,23 @@ export default {
         deleted: "Аккаунт удален",
       },
     },
+    stopwords: {
+      search: "Поиск стоп-слов...",
+      empty: "Стоп-слов не найдено",
+      sources: {
+        all: "Все источники",
+        user: "Пользовательские",
+        default: "Стандартые",
+      },
+      sort: {
+        word: "Слово",
+        source: "Источник",
+        updatedAt: "Дата обновления",
+      },
+      add: {
+        placeholder: "Добавить новое стоп-слово...",
+      },
+    },
   },
   common: {
     retry: "Повторить",

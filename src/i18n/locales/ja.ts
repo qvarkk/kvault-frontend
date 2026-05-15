@@ -156,6 +156,23 @@ export default {
         deleted: "アカウントを削除しました",
       },
     },
+    stopwords: {
+      search: "ストップワードを検索...",
+      empty: "ストップワードが見つかりません",
+      sources: {
+        all: "すべてのソース",
+        user: "ユーザー",
+        default: "デフォルト",
+      },
+      sort: {
+        word: "単語",
+        source: "ソース",
+        updatedAt: "更新日時",
+      },
+      add: {
+        placeholder: "新しいストップワードを追加...",
+      },
+    },
   },
   common: {
     retry: "リトライ",
