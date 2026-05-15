@@ -120,6 +120,14 @@ export default {
       size: "Size",
     },
   },
+  settings: {
+    title: "Settings",
+    tabs: {
+      account: "Account",
+      stopwords: "Stopwords",
+      tags: "Tags",
+    },
+  },
   common: {
     retry: "Retry",
     cancel: "Cancel",

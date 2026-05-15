@@ -9,4 +9,12 @@ export const tagsService = {
   create(name: string) {
     return http.post<Tag>("/tags", { name })
   },
+
+  update(id: string, name: string) {
+    return http.patch<Tag>(`/tags/${id}`, { name })
+  },
+
+  remove(id: string) {
+    return http.delete(`/tags/${id}`)
+  },
 }

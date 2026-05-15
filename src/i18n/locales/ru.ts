@@ -122,6 +122,14 @@ export default {
       size: "Размер",
     },
   },
+  settings: {
+    title: "Настройки",
+    tabs: {
+      account: "Аккаунт",
+      stopwords: "Стоп-слова",
+      tags: "Теги",
+    },
+  },
   common: {
     retry: "Повторить",
     cancel: "Отмена",

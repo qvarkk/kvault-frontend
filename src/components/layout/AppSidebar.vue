@@ -33,12 +33,15 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "../ui/avatar"
-import { computed } from "vue"
+import { computed, ref } from "vue"
+import SettingsModal from "../settings/SettingsModal.vue"
 
 const { t } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
 const { state, isMobile, openMobile, toggleSidebar } = useSidebar()
+
+const settingsOpen = ref(false)
 
 const isExpanded = computed(() =>
   isMobile.value ? openMobile.value : state.value === "expanded",
@@ -47,6 +50,11 @@ const isExpanded = computed(() =>
 function logout() {
   auth.logout()
   router.push({ name: "login" })
+}
+
+function openSettings() {
+  toggleSidebar()
+  settingsOpen.value = true
 }
 </script>
 
@@ -138,8 +146,8 @@ function logout() {
                 >
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Settings />
+              <DropdownMenuItem @click="openSettings">
+                <Settings class="pointer-events-none" />
                 <span>{{ t("nav.settings") }}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -153,4 +161,5 @@ function logout() {
       </SidebarMenu>
     </SidebarFooter>
   </Sidebar>
+  <SettingsModal v-model:open="settingsOpen" />
 </template>

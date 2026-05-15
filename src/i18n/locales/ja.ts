@@ -121,6 +121,14 @@ export default {
       size: "サイズ",
     },
   },
+  settings: {
+    title: "設定",
+    tabs: {
+      account: "アカウント",
+      stopwords: "ストップワード",
+      tags: "タグ",
+    },
+  },
   common: {
     retry: "リトライ",
     cancel: "キャンセル",
