@@ -94,10 +94,37 @@ export default {
       exportPdfErrorDescription: "Unknown error occured while exporting PDF",
     },
   },
+  files: {
+    search: "Search files...",
+    download: "Download",
+    empty: "No files yes",
+    dropHere: "Drop PDF files here",
+    onlyPdf: "Only PDF files are allowed",
+    upload: {
+      first: "Upload your first file",
+    },
+    delete: {
+      title: "Delete file?",
+      description: "This file will be moved to trash.",
+      deleted: "File was moved to trash",
+    },
+    status: {
+      ready: "Ready",
+      uploading: "Uploading",
+      processing: "Processing",
+      error: "Error",
+    },
+    sort: {
+      createdAt: "Date uploaded",
+      name: "Name",
+      size: "Size",
+    },
+  },
   common: {
     retry: "Retry",
     cancel: "Cancel",
     create: "Create",
+    upload: "Upload",
     creating: "Creating...",
     saving: "Saving...",
     delete: "Delete",

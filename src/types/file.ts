@@ -1,4 +1,4 @@
-export type FileStatus = 'uploading' | 'processing' | 'ready' | 'error'
+export type FileStatus = "uploading" | "processing" | "ready" | "error"
 
 export interface File {
   id: string
@@ -17,4 +17,12 @@ export interface PresignedUrl {
   mimeType: string
   size: number
   expiresAt: string
+}
+
+export interface UploadItem {
+  id: string
+  name: string
+  progress: number
+  status: "uploading" | "done" | "error"
+  error?: string
 }

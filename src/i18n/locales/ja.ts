@@ -95,10 +95,37 @@ export default {
         "PDFのエクスポート中に不明なエラーが発生しました",
     },
   },
+  files: {
+    search: "ファイルを検索...",
+    download: "ダウンロード",
+    empty: "ファイルはまだありません",
+    dropHere: "ここにPDFファイルをドロップしてください",
+    onlyPdf: "PDFファイルのみアップロード可能です",
+    upload: {
+      first: "最初のファイルをアップロードしましょう",
+    },
+    delete: {
+      title: "ファイルを削除しますか？",
+      description: "このファイルはゴミ箱の移動されます.",
+      deleted: "ファイルはゴミ箱に移動しました",
+    },
+    status: {
+      ready: "準備完了",
+      uploading: "アップロード中",
+      processing: "処理中",
+      error: "エラー",
+    },
+    sort: {
+      createdAt: "アップロード日時",
+      name: "名前",
+      size: "サイズ",
+    },
+  },
   common: {
     retry: "リトライ",
     cancel: "キャンセル",
     create: "作成",
+    upload: "アップロード",
     creating: "作成中...",
     saving: "保存中...",
     delete: "削除",
