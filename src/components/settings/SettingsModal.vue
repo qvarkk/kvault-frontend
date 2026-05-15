@@ -35,7 +35,7 @@ const open = defineModel<boolean>("open")
             {{ t("settings.tabs.tags") }}
           </TabsTrigger>
         </TabsList>
-        <div class="flex-1 overflow-y-auto overflow-x-hidden mt-4">
+        <div class="flex-1 overflow-y-auto overflow-x-hidden mt-4 max-h-[50vh]">
           <TabsContent value="account">
             <AccountTab />
           </TabsContent>

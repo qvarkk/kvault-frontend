@@ -155,6 +155,23 @@ export default {
         deleted: "Account deleted",
       },
     },
+    stopwords: {
+      search: "Search stopwords...",
+      empty: "No stopwords found",
+      sources: {
+        all: "All sources",
+        user: "User",
+        default: "Default",
+      },
+      sort: {
+        word: "Word",
+        source: "Source",
+        updatedAt: "Updated",
+      },
+      add: {
+        placeholder: "Add new stopword...",
+      },
+    },
   },
   common: {
     retry: "Retry",
@@ -162,6 +179,7 @@ export default {
     create: "Create",
     upload: "Upload",
     save: "Save",
+    add: "Add",
     creating: "Creating...",
     saving: "Saving...",
     delete: "Delete",

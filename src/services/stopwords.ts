@@ -1,9 +1,9 @@
 import http from "./http"
-import type { Stopword, StopwordCreatePayload } from "@/types"
+import type { Listed, Stopword, StopwordCreatePayload } from "@/types"
 
 export const stopwordsService = {
   list(params?: Record<string, unknown>) {
-    return http.get<Stopword[]>("/stopwords", { params })
+    return http.get<Listed<Stopword>>("/stopwords", { params })
   },
 
   create(payload: StopwordCreatePayload) {
