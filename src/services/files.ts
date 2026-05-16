@@ -1,9 +1,9 @@
-import http from './http'
-import type { File, Paginated } from '@/types'
+import http from "./http"
+import type { File, Paginated } from "@/types"
 
 export const filesService = {
   list(params?: Record<string, unknown>) {
-    return http.get<Paginated<File>>('/files', { params })
+    return http.get<Paginated<File>>("/files", { params })
   },
 
   getDownloadUrl(id: string) {
@@ -12,14 +12,14 @@ export const filesService = {
 
   upload(file: globalThis.File, onProgress?: (percent: number) => void) {
     const formData = new FormData()
-    formData.append('file', file)
-    return http.post<File>('/files/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    formData.append("file", file)
+    return http.post<File>("/files/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
       onUploadProgress(event) {
         if (onProgress && event.total) {
           onProgress(Math.round((event.loaded / event.total) * 100))
         }
-      }
+      },
     })
   },
 
@@ -29,5 +29,5 @@ export const filesService = {
 
   restore(id: string) {
     return http.post(`/files/${id}/restore`)
-  }
+  },
 }

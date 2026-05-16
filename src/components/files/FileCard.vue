@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
-import {
-  FileText,
-  Download,
-  Trash2,
-  Ellipsis,
-  RefreshCw,
-} from "lucide-vue-next"
+import { FileText, Download, Trash2, Ellipsis } from "lucide-vue-next"
 import {
   Card,
   CardHeader,
@@ -104,9 +98,9 @@ const statusVariant: Record<
         <Badge :variant="statusVariant[file.status]" class="text-xs">
           {{ t(`files.status.${file.status}`) }}
         </Badge>
-        <span class="text-xs text-muted-foreground">{{
-          formatSize(file.size)
-        }}</span>
+        <span class="text-xs text-muted-foreground">
+          {{ formatSize(file.size) }}
+        </span>
       </div>
     </CardContent>
 
@@ -130,9 +124,9 @@ const statusVariant: Record<
     <AlertDialogContent>
       <AlertDialogHeader>
         <AlertDialogTitle>{{ t("files.delete.title") }}</AlertDialogTitle>
-        <AlertDialogDescription>{{
-          t("files.delete.description")
-        }}</AlertDialogDescription>
+        <AlertDialogDescription>
+          {{ t("files.delete.description") }}
+        </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel>{{ t("common.cancel") }}</AlertDialogCancel>

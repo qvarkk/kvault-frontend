@@ -3,7 +3,9 @@ import AppLayout from "@/components/layout/AppLayout.vue"
 import NoteCard from "@/components/notes/NoteCard.vue"
 import NoteSkeleton from "@/components/notes/NoteSkeleton.vue"
 import { Button } from "@/components/ui/button"
-import { useNotes } from "@/composables/useNotes"
+import { useEntities } from "@/composables/useEntities"
+import { notesService } from "@/services/notes"
+import type { Note } from "@/types"
 import { useHead } from "@vueuse/head"
 import { NotebookPen, RefreshCw } from "lucide-vue-next"
 import { onMounted } from "vue"
@@ -14,30 +16,35 @@ const { t } = useI18n()
 const router = useRouter()
 useHead({ title: t("head.home") })
 
-const { notes, loading, error, fetchNotes } = useNotes()
+const {
+  entities: notes,
+  loading: notesLoading,
+  error: notesError,
+  fetchEntities: fetchNotes,
+} = useEntities<Note>(notesService)
 
-function fetch() {
+function loadNotes() {
   fetchNotes({ sort_by: "updated_at", order_by: "DESC", page_size: 9 })
 }
 
-onMounted(fetch)
+onMounted(loadNotes)
 </script>
 
 <template>
   <AppLayout>
     <div
-      v-if="loading"
+      v-if="notesLoading"
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 container"
     >
       <NoteSkeleton v-for="n in 9" :key="n" />
     </div>
 
     <div
-      v-else-if="error"
+      v-else-if="notesError"
       class="flex flex-col items-center justify-center gap-4 pt-24 pb-8 text-muted-foreground container"
     >
-      <p class="text-destructive">{{ error.detail }}</p>
-      <Button variant="outline" @click="fetch">
+      <p class="text-destructive">{{ notesError.detail }}</p>
+      <Button variant="outline" @click="loadNotes">
         <RefreshCw class="w-4 h-4 mr-2" />
         {{ t("common.retry") }}
       </Button>
