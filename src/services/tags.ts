@@ -1,9 +1,10 @@
+import type { AxiosRequestConfig } from "axios"
 import http from "./http"
 import type { Tag, Paginated } from "@/types"
 
 export const tagsService = {
-  list(params?: Record<string, unknown>) {
-    return http.get<Paginated<Tag>>("/tags", { params })
+  list(params?: Record<string, unknown>, config?: AxiosRequestConfig) {
+    return http.get<Paginated<Tag>>("/tags", { params, ...config })
   },
 
   create(name: string) {

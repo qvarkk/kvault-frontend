@@ -130,6 +130,7 @@ export default {
       tags: "Теги",
     },
     account: {
+      description: "Настройки аккаунта",
       email: "Эл. Почта",
       apiKey: {
         name: "API Ключ",
@@ -158,6 +159,8 @@ export default {
       },
     },
     stopwords: {
+      description:
+        "Слова, исключенные из автотегирования. Отключайте стандартные или добавляйте свои.",
       search: "Поиск стоп-слов...",
       empty: "Стоп-слов не найдено",
       sources: {
@@ -174,6 +177,22 @@ export default {
         placeholder: "Добавить новое стоп-слово...",
       },
     },
+    tags: {
+      description: "Нажмите на название тега, чтобы переименовать его.",
+      search: "Поиск тегов...",
+      empty: "Тегов не найдно",
+      fields: {
+        noteCount: "{count} заметок",
+      },
+      sort: {
+        name: "Название",
+        updatedAt: "Последнее обновление",
+        createdAt: "Дата создания",
+      },
+      add: {
+        placeholder: "Добавить новый тег...",
+      },
+    },
   },
   common: {
     retry: "Повторить",
@@ -181,6 +200,7 @@ export default {
     create: "Создать",
     upload: "Загрузить",
     save: "Сохранить",
+    add: "Добавить",
     creating: "Создание...",
     saving: "Сохранение...",
     delete: "Удалить",

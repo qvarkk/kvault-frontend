@@ -129,6 +129,7 @@ export default {
       tags: "タグ",
     },
     account: {
+      description: "アカウント設定",
       email: "メールアドレス",
       apiKey: {
         name: "APIキー",
@@ -157,6 +158,8 @@ export default {
       },
     },
     stopwords: {
+      description:
+        "自動タグ生成から除外される単語です。デフォルトを無効にするか、独自の単語を追加してください。",
       search: "ストップワードを検索...",
       empty: "ストップワードが見つかりません",
       sources: {
@@ -173,6 +176,22 @@ export default {
         placeholder: "新しいストップワードを追加...",
       },
     },
+    tags: {
+      description: "タグ名をクリックすると変更できます。",
+      search: "タグを検索...",
+      empty: "タグが見つかりません",
+      fields: {
+        noteCount: "{count}個のノート",
+      },
+      sort: {
+        name: "名前",
+        updatedAt: "更新日時",
+        createdAt: "作成日時",
+      },
+      add: {
+        placeholder: "新しいタグを追加...",
+      },
+    },
   },
   common: {
     retry: "リトライ",
@@ -180,6 +199,7 @@ export default {
     create: "作成",
     upload: "アップロード",
     save: "保存",
+    add: "追加",
     creating: "作成中...",
     saving: "保存中...",
     delete: "削除",

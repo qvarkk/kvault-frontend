@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
+import DialogDescription from "@/components/ui/dialog/DialogDescription.vue"
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -97,6 +98,10 @@ function openDeleteModal() {
 
 <template>
   <div class="flex flex-col gap-6">
+    <DialogDescription class="text-center hidden">
+      {{ t("settings.account.description") }}
+    </DialogDescription>
+
     <div class="flex items-center justify-between gap-4">
       <div class="flex flex-col gap-1">
         <p class="text-sm font-medium">{{ t("settings.account.email") }}</p>

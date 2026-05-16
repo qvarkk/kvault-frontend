@@ -128,6 +128,7 @@ export default {
       tags: "Tags",
     },
     account: {
+      description: "Account settings",
       email: "Email",
       apiKey: {
         name: "API Key",
@@ -156,6 +157,8 @@ export default {
       },
     },
     stopwords: {
+      description:
+        "Words excluded from autotagging. Disable defaults or add your own.",
       search: "Search stopwords...",
       empty: "No stopwords found",
       sources: {
@@ -170,6 +173,22 @@ export default {
       },
       add: {
         placeholder: "Add new stopword...",
+      },
+    },
+    tags: {
+      description: "Click on tag name to change it.",
+      search: "Search tags...",
+      empty: "No tags found",
+      fields: {
+        noteCount: "{count} notes",
+      },
+      sort: {
+        name: "Name",
+        updatedAt: "Last updated",
+        createdAt: "Date created",
+      },
+      add: {
+        placeholder: "Add new tag...",
       },
     },
   },

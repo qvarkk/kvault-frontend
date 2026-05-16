@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { watchDebounced } from "@vueuse/core"
 import { stopwordsService } from "@/services/stopwords"
@@ -24,6 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { ButtonGroup } from "@/components/ui/button-group"
+import DialogDescription from "@/components/ui/dialog/DialogDescription.vue"
+import Separator from "@/components/ui/separator/Separator.vue"
 
 const { t } = useI18n()
 
@@ -96,12 +99,16 @@ async function handleAdd() {
 }
 
 watchDebounced(query, fetchStopwords, { debounce: 400 })
-watchDebounced([source, sortBy, orderBy], fetchStopwords)
+watch([source, sortBy, orderBy], fetchStopwords)
 onMounted(fetchStopwords)
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 h-full">
+    <DialogDescription class="text-center">
+      {{ t("settings.stopwords.description") }}
+    </DialogDescription>
+
     <div class="flex flex-col gap-2">
       <Input
         v-model="query"
@@ -109,6 +116,35 @@ onMounted(fetchStopwords)
         class="focus-visible:ring-1"
       />
       <div class="flex gap-2">
+        <ButtonGroup>
+          <Button
+            variant="outline"
+            size="icon"
+            @click="orderBy = orderBy === 'ASC' ? 'DESC' : 'ASC'"
+          >
+            <ArrowUp
+              v-if="orderBy === 'ASC'"
+              class="w-4 h-4 pointer-events-none"
+            />
+            <ArrowDown v-else class="w-4 h-4 pointer-events-none" />
+          </Button>
+          <Select v-model="sortBy" class="flex-1">
+            <SelectTrigger class="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="word">
+                {{ t("settings.stopwords.sort.word") }}
+              </SelectItem>
+              <SelectItem value="source">
+                {{ t("settings.stopwords.sort.source") }}
+              </SelectItem>
+              <SelectItem value="updated_at">
+                {{ t("settings.stopwords.sort.updatedAt") }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </ButtonGroup>
         <Select v-model="source">
           <SelectTrigger class="w-32 flex-1">
             <SelectValue :placeholder="t('settings.stopwords.sources.all')" />
@@ -125,33 +161,6 @@ onMounted(fetchStopwords)
             </SelectItem>
           </SelectContent>
         </Select>
-        <Select v-model="sortBy" class="flex-1">
-          <SelectTrigger class="w-36">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="word">{{
-              t("settings.stopwords.sort.word")
-            }}</SelectItem>
-            <SelectItem value="source">{{
-              t("settings.stopwords.sort.source")
-            }}</SelectItem>
-            <SelectItem value="updated_at">{{
-              t("settings.stopwords.sort.updatedAt")
-            }}</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button
-          variant="outline"
-          size="icon"
-          @click="orderBy = orderBy === 'ASC' ? 'DESC' : 'ASC'"
-        >
-          <ArrowUp
-            v-if="orderBy === 'ASC'"
-            class="w-4 h-4 pointer-events-none"
-          />
-          <ArrowDown v-else class="w-4 h-4 pointer-events-none" />
-        </Button>
       </div>
 
       <div class="flex gap-2">
@@ -169,11 +178,14 @@ onMounted(fetchStopwords)
       </div>
     </div>
 
-    <div v-if="loading" class="flex justify-center py-8 min-h-full">
+    <div v-if="loading" class="flex items-center justify-center min-h-80">
       <Loader2 class="w-5 h-5 animate-spin text-muted-foreground" />
     </div>
 
-    <div v-else-if="error" class="flex flex-col items-center gap-2 py-8">
+    <div
+      v-else-if="error"
+      class="flex flex-col items-center justify-center gap-2 min-h-80"
+    >
       <p class="text-sm text-destructive">{{ error.detail }}</p>
       <Button variant="outline" size="sm" @click="fetchStopwords">
         <RefreshCw class="w-4 h-4 mr-2 pointer-events-none" />
@@ -188,7 +200,7 @@ onMounted(fetchStopwords)
       {{ t("settings.stopwords.empty") }}
     </div>
 
-    <div v-else class="flex flex-col">
+    <div v-else class="flex flex-col divide-y">
       <div
         v-for="word in stopwords"
         :key="word.word"

@@ -4,6 +4,7 @@ export interface Tag {
   name: string
   createdAt: string
   updatedAt: string
+  noteCount: number
 }
 
 export interface TagRef {
