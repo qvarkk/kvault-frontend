@@ -41,6 +41,7 @@ import {
   NumberFieldInput,
 } from "@/components/ui/number-field"
 import { notesService } from "@/services/notes"
+import EditorShortcutsHelper from "@/components/notes/EditorShortcutsHelper.vue"
 
 const props = defineProps<{
   id: string
@@ -309,17 +310,13 @@ watch(content, (newValue, oldValue) => {
 
       <div class="h-full py-4 overflow-y-auto">
         <NoteEditor
-          :language="
-            i18n.global.locale.value === 'en'
-              ? 'en_US'
-              : i18n.global.locale.value
-          "
           :theme="isDark ? 'dark' : 'light'"
           v-model:content="content"
         />
       </div>
     </div>
 
+    <EditorShortcutsHelper />
     <DeleteNoteAlertModal
       v-model:open="deleteDialogOpen"
       :note-id="id"

@@ -22,7 +22,7 @@ config({
   editorConfig: {
     languageUserDefined: {
       ru: ru,
-      jp: JP_JP,
+      ja: JP_JP,
     },
   },
 })

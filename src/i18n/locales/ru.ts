@@ -97,6 +97,30 @@ export default {
         "Неизвестная ошибка произошла при экспорте PDF",
     },
   },
+  shortcuts: {
+    title: "горячие клавиши",
+    hide: {
+      action: "убрать",
+      undo: "Отмена",
+      message: {
+        title: "Горячие клавишы убраны",
+        description: "Это может быть изменено в настройках.",
+      },
+    },
+    actions: {
+      bold: "Жирный",
+      italic: "Курсив",
+      underline: "Подчеркнутый",
+      strikethrough: "Зачеркнутый",
+      subscript: "Нижний индекс",
+      superscript: "Верхний индекс",
+      undo: "Отмена",
+      redo: "Вернуть",
+      ul: "Упорядоченный список",
+      ol: "Неупорядоченный список",
+      link: "Ссылка",
+    },
+  },
   files: {
     search: "Поиск файлов...",
     download: "Скачать",
@@ -134,6 +158,10 @@ export default {
     account: {
       description: "Настройки аккаунта",
       email: "Эл. Почта",
+      editor: {
+        title: "Настройки редактора",
+        hideShortcuts: "Спрятать меню горячих клавиш",
+      },
       apiKey: {
         name: "API Ключ",
         title: "Обновить API Ключ",

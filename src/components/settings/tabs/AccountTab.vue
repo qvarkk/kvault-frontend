@@ -17,9 +17,12 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import DialogDescription from "@/components/ui/dialog/DialogDescription.vue"
+import { Switch } from "@/components/ui/switch"
+import { useEditorShortcuts } from "@/composables/useEditorShortcuts"
 
 const { t } = useI18n()
 const auth = useAuthStore()
+const { isHidden } = useEditorShortcuts()
 
 const refreshLoading = ref(false)
 
@@ -116,6 +119,20 @@ function openDeleteModal() {
           {{ t("settings.account.apiKey.name") }}
         </p>
         <p class="text-xs text-muted-foreground">{{ auth.user?.apiKey }}</p>
+      </div>
+    </div>
+
+    <Separator />
+
+    <div class="flex flex-col items-start gap-2">
+      <p class="text-sm font-medium mb-2">
+        {{ t("settings.account.editor.title") }}
+      </p>
+      <div class="flex w-full items-center justify-between gap-2">
+        <p class="text-xs text-muted-foreground">
+          {{ t("settings.account.editor.hideShortcuts") }}
+        </p>
+        <Switch v-model:model-value="isHidden" />
       </div>
     </div>
 

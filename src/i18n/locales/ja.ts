@@ -96,6 +96,30 @@ export default {
         "PDFのエクスポート中に不明なエラーが発生しました",
     },
   },
+  shortcuts: {
+    title: "キーボードショートカット",
+    hide: {
+      action: "隠す",
+      undo: "元に戻す",
+      message: {
+        title: "ショートカットを非表示にしました",
+        description: "この設定設定画面から変更できます。",
+      },
+    },
+    actions: {
+      bold: "太字",
+      italic: "斜体",
+      underline: "下線",
+      strikethrough: "取り消し線",
+      subscript: "下付き文字",
+      superscript: "上付き文字",
+      undo: "元に戻す",
+      redo: "やり直す",
+      ul: "番号なし箇条書き",
+      ol: "番号付の箇条書き",
+      link: "リンク",
+    },
+  },
   files: {
     search: "ファイルを検索...",
     download: "ダウンロード",
@@ -133,6 +157,10 @@ export default {
     account: {
       description: "アカウント設定",
       email: "メールアドレス",
+      editor: {
+        title: "エディタ設定",
+        hideShortcuts: "ショートカットメニューを非表示にする",
+      },
       apiKey: {
         name: "APIキー",
         title: "APIキーを再生成",

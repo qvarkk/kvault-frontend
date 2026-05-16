@@ -95,6 +95,30 @@ export default {
       exportPdfErrorDescription: "Unknown error occured while exporting PDF",
     },
   },
+  shortcuts: {
+    title: "keyboard shortcuts",
+    hide: {
+      action: "hide",
+      undo: "Undo",
+      message: {
+        title: "Shortcuts hidden",
+        description: "This can be changed in settings.",
+      },
+    },
+    actions: {
+      bold: "Bold",
+      italic: "Italic",
+      underline: "Underline",
+      strikethrough: "Strikethrough",
+      subscript: "Subscript",
+      superscript: "Superscript",
+      undo: "Undo",
+      redo: "Redo",
+      ul: "Unordered List",
+      ol: "Ordered List",
+      link: "Link",
+    },
+  },
   files: {
     search: "Search files...",
     download: "Download",
@@ -132,6 +156,10 @@ export default {
     account: {
       description: "Account settings",
       email: "Email",
+      editor: {
+        title: "Editor settings",
+        hideShortcuts: "Hide shortcuts menu",
+      },
       apiKey: {
         name: "API Key",
         title: "Refresh API Key",

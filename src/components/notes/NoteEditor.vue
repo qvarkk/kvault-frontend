@@ -15,11 +15,10 @@ import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { toast } from "vue-sonner"
 import { Smile } from "lucide-vue-next"
-import { Button } from "../ui/button"
+import i18n from "@/i18n"
 
 const props = defineProps<{
   theme: Themes
-  language: string
 }>()
 
 const content = defineModel<string>("content")
@@ -81,6 +80,13 @@ const toolbars = computed(() =>
   isMobile.value ? mobileToolbars : desktopToolbars,
 )
 
+const getEditorLanguage = computed(() => {
+  const currentLocale = i18n.global.locale.value
+
+  if (currentLocale === "en") return "en_US"
+  return currentLocale
+})
+
 const previewTheme = ref<PreviewThemes>("default")
 
 function handlePdfExportSuccess() {
@@ -104,7 +110,7 @@ function handlePdfExportError(err: unknown) {
     :toolbars="toolbars"
     :preview="!isMobile"
     :preview-theme="previewTheme"
-    :language="language"
+    :language="getEditorLanguage"
     code-theme="github"
     no-upload-img
     style="height: 100% !important"
