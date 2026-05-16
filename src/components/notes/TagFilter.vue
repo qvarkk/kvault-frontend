@@ -5,11 +5,12 @@ import { onMounted, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Button } from "../ui/button"
-import { Check, Delete, Loader2, RefreshCw, TagIcon } from "lucide-vue-next"
+import { Check, Delete, RefreshCw, TagIcon } from "lucide-vue-next"
 import { Badge } from "../ui/badge"
 import { Input } from "../ui/input"
 import Separator from "../ui/separator/Separator.vue"
 import { tagsService } from "@/services/tags"
+import { Spinner } from "../ui/spinner"
 
 const PAGE_SIZE = 20
 
@@ -77,7 +78,7 @@ onMounted(fetch)
 <template>
   <Popover>
     <PopoverTrigger as-child>
-      <Button variant="outline" class="w-full gap-2">
+      <Button variant="outline" class="w-full gap-1">
         <TagIcon class="w-4 h-4" />
         <span>{{ t("notes.tags.filter") }}</span>
         <Badge v-if="tagIds.length > 0" variant="secondary">
@@ -112,7 +113,7 @@ onMounted(fetch)
         </button>
         <div ref="sentinel" class="h-1" />
         <div v-if="loading || loadingMore" class="flex justify-center py-4">
-          <Loader2 class="w-4 h-4 animate-spin text-muted-foreground" />
+          <Spinner />
         </div>
         <div v-if="error" class="flex flex-col items-center gap-2 py-2">
           <p class="text-xs text-destructive">{{ error.detail }}</p>

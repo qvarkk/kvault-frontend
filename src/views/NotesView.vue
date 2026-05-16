@@ -5,11 +5,16 @@ import NoteCard from "@/components/notes/NoteCard.vue"
 import NoteSkeleton from "@/components/notes/NoteSkeleton.vue"
 import NotesToolbar from "@/components/notes/NotesToolbar.vue"
 import { Button } from "@/components/ui/button"
-import { useInfiniteNotes } from "@/composables/useInfiniteNotes"
+import { Spinner } from "@/components/ui/spinner"
+import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
+import { notesService } from "@/services/notes"
+import type { Note } from "@/types"
 import { useIntersectionObserver, watchDebounced } from "@vueuse/core"
-import { Loader2, NotebookPen, Plus, RefreshCw } from "lucide-vue-next"
+import { NotebookPen, Plus, RefreshCw } from "lucide-vue-next"
 import { computed, onMounted, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
+
+const PAGE_SIZE = 20
 
 const { t } = useI18n()
 
@@ -19,8 +24,8 @@ const orderBy = ref("DESC")
 const tagIds = ref<string[]>([])
 const createModalOpen = ref(false)
 
-const { notes, loading, loadingMore, error, fetchNotes, loadMore } =
-  useInfiniteNotes()
+const { entities, loading, loadingMore, error, fetchEntities, loadMore } =
+  useInfiniteEntities<Note>(notesService)
 
 const sentinel = ref<HTMLElement | null>(null)
 
@@ -29,11 +34,11 @@ const params = computed(() => ({
   sort_by: sortBy.value,
   order_by: orderBy.value,
   tag_ids: tagIds.value,
-  page_size: 20,
+  page_size: PAGE_SIZE,
 }))
 
 async function loadNotes() {
-  await fetchNotes(params.value)
+  await fetchEntities(params.value)
 }
 
 function openCreateModal() {
@@ -41,7 +46,7 @@ function openCreateModal() {
 }
 
 function handleNoteDeleted(id: string) {
-  notes.value = notes.value.filter((n) => n.id !== id)
+  entities.value = entities.value.filter((n) => n.id !== id)
 }
 
 useIntersectionObserver(sentinel, ([entry]) => {
@@ -61,6 +66,7 @@ onMounted(loadNotes)
         v-model:sortBy="sortBy"
         v-model:orderBy="orderBy"
         v-model:tagIds="tagIds"
+        v-model:loading="loading"
       />
 
       <div
@@ -83,7 +89,7 @@ onMounted(loadNotes)
 
       <div v-else>
         <div
-          v-if="notes.length === 0"
+          v-if="entities.length === 0"
           class="flex flex-col items-center justify-center gap-4 pt-24 pb-8 text-muted-foreground"
         >
           <NotebookPen class="w-12 h-12" />
@@ -98,7 +104,7 @@ onMounted(loadNotes)
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           <NoteCard
-            v-for="note in notes"
+            v-for="note in entities"
             :key="note.id"
             :note="note"
             :include-menu="true"
@@ -109,7 +115,7 @@ onMounted(loadNotes)
         <div ref="sentinel" class="h-1" />
 
         <div v-if="loadingMore" class="flex justify-center py-4">
-          <Loader2 class="w-4 h-4 animate-spin text-muted-foreground" />
+          <Spinner />
         </div>
       </div>
     </div>
