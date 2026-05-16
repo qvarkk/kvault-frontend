@@ -3,6 +3,7 @@ import {
   ChevronsUpDown,
   Files,
   Home,
+  Info,
   LogOut,
   NotebookPen,
   PanelLeft,
@@ -33,8 +34,14 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "../ui/avatar"
-import { computed, ref } from "vue"
+import { computed, ref, type FunctionalComponent } from "vue"
 import SettingsModal from "../settings/SettingsModal.vue"
+
+interface sidebarItem {
+  name: string
+  routeName: string
+  iconComponent: FunctionalComponent
+}
 
 const { t } = useI18n()
 const router = useRouter()
@@ -47,13 +54,36 @@ const isExpanded = computed(() =>
   isMobile.value ? openMobile.value : state.value === "expanded",
 )
 
+const sidebarItems: sidebarItem[] = [
+  {
+    name: t("nav.home"),
+    routeName: "home",
+    iconComponent: Home,
+  },
+  {
+    name: t("nav.notes"),
+    routeName: "notes",
+    iconComponent: NotebookPen,
+  },
+  {
+    name: t("nav.files"),
+    routeName: "files",
+    iconComponent: Files,
+  },
+  {
+    name: t("nav.about"),
+    routeName: "about",
+    iconComponent: Info,
+  },
+]
+
 function logout() {
   auth.logout()
   router.push({ name: "login" })
 }
 
 function openSettings() {
-  toggleSidebar()
+  if (isMobile.value) toggleSidebar()
   settingsOpen.value = true
 }
 </script>
@@ -71,7 +101,7 @@ function openSettings() {
           </span>
           <SidebarMenuButton class="self-end w-auto" @click="toggleSidebar">
             <X v-if="isMobile" />
-            <PanelLeft v-else />
+            <PanelLeft v-else class="pointer-events-none" />
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
@@ -80,31 +110,16 @@ function openSettings() {
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
-            <SidebarMenuItem>
+            <SidebarMenuItem v-for="item in sidebarItems">
               <SidebarMenuButton
-                @click="router.push({ name: 'home' })"
-                :tooltip="t('nav.home')"
+                @click="router.push({ name: item.routeName })"
+                :tooltip="item.name"
               >
-                <Home />
-                <span>{{ t("nav.home") }}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                @click="router.push({ name: 'notes' })"
-                :tooltip="t('nav.notes')"
-              >
-                <NotebookPen />
-                <span>{{ t("nav.notes") }}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                @click="router.push({ name: 'files' })"
-                :tooltip="t('nav.files')"
-              >
-                <Files />
-                <span>{{ t("nav.files") }}</span>
+                <component
+                  :is="item.iconComponent"
+                  class="pointer-events-none"
+                />
+                <span class="pointer-events-none">{{ item.name }}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -125,35 +140,38 @@ function openSettings() {
               :style="!isExpanded ? 'padding: 4px !important' : ''"
             >
               <SidebarMenuButton :tooltip="t('nav.account')" class="py-5">
-                <Avatar class="w-6 h-6">
+                <Avatar class="w-6 h-6 pointer-events-none">
                   <AvatarFallback
                     class="bg-primary text-primary-foreground text-xs"
                   >
                     {{ auth.user?.email?.slice(0, 2).toUpperCase() }}
                   </AvatarFallback>
                 </Avatar>
-                <span v-if="isExpanded" class="truncate">{{
-                  auth.user?.email
-                }}</span>
-                <ChevronsUpDown v-if="isExpanded" class="ml-auto" />
+                <span v-if="isExpanded" class="truncate pointer-events-none">
+                  {{ auth.user?.email }}
+                </span>
+                <ChevronsUpDown
+                  v-if="isExpanded"
+                  class="ml-auto pointer-events-none"
+                />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent :class="!isMobile ? 'ml-2' : ''" side="top">
               <DropdownMenuLabel class="flex flex-col">
                 <span class="truncate">{{ auth.user?.email }}</span>
-                <span class="text-xs text-muted-foreground truncate"
-                  >ID: {{ auth.user?.id }}</span
-                >
+                <span class="text-xs text-muted-foreground truncate">
+                  ID: {{ auth.user?.id }}
+                </span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem @click="openSettings">
                 <Settings class="pointer-events-none" />
-                <span>{{ t("nav.settings") }}</span>
+                <span class="pointer-events-none">{{ t("nav.settings") }}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem @click="logout" class="text-destructive">
-                <LogOut />
-                <span>{{ t("nav.logout") }}</span>
+                <LogOut class="pointer-events-none" />
+                <span class="pointer-events-none">{{ t("nav.logout") }}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

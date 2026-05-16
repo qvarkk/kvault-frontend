@@ -29,6 +29,7 @@ export default {
     home: "Home",
     notes: "Notes",
     files: "Files",
+    about: "About",
     account: "Account",
     settings: "Settings",
     logout: "Log out",
@@ -191,6 +192,32 @@ export default {
       add: {
         placeholder: "Add new tag...",
       },
+    },
+  },
+  about: {
+    tagline: "Self-hosted personal knowledge base",
+    what: {
+      title: "What is this",
+      description:
+        "kvault is a free, self-hosted alternative to commercial note-taking apps. Store notes, tag them automatically, and keep your files — all on your own infrastructure. No subscriptions, no telemetry, no lock-in.",
+    },
+    details: {
+      title: "Details",
+      version: "Version",
+      license: "License",
+      deployment: "Deployment",
+      storage: "Storage",
+    },
+    stack: "Stack",
+    repositories: "Repositories",
+    selfHosting: {
+      title: "Self-hosting",
+      description: "Clone the repositories, configure your",
+      description2: "files, and run",
+    },
+    alpha: {
+      title: "Alpha software",
+      warning: "Expect breaking changes between versions",
     },
   },
   common: {

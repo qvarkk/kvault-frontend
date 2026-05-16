@@ -29,6 +29,7 @@ export default {
     home: "マイページ",
     notes: "ノート",
     files: "ファイル",
+    about: "このアプリについて",
     account: "アカウント",
     settings: "設定",
     logout: "ログアウト",
@@ -192,6 +193,32 @@ export default {
       add: {
         placeholder: "新しいタグを追加...",
       },
+    },
+  },
+  about: {
+    tagline: "セルフホスト型の個人向けナレッジベース",
+    what: {
+      title: "何々",
+      description:
+        "kvaultは、商用のノートアプリに代わる、無料のセルフホスト型代替手段です。ノートを保存、自動タグ生成、ファイルの管理をすべて自身のインフラ上でおこなえます。サブスクリプションなし、テレメトリーなし、ロックインなし。",
+    },
+    details: {
+      title: "詳細仕様",
+      version: "バージョン",
+      license: "ライセンス",
+      deployment: "デプロイ環境",
+      storage: "ストレージ",
+    },
+    stack: "使用技術",
+    repositories: "リポジトリ",
+    selfHosting: {
+      title: "セルフホスト",
+      description: "レポジトリをクローンし、",
+      description2: "ファイルを設定して、実行します：",
+    },
+    alpha: {
+      title: "アルファ版ソフトウェア",
+      warning: "バージョン間で破壊的変更が発生する可能性があります。",
     },
   },
   common: {
