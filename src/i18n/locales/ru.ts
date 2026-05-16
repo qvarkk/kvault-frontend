@@ -260,5 +260,7 @@ export default {
     creating: "Создание...",
     saving: "Сохранение...",
     delete: "Удалить",
+    open: "Открыть",
+    openInNewTab: "Открыть в новой вкладке",
   },
 }

@@ -259,5 +259,7 @@ export default {
     creating: "作成中...",
     saving: "保存中...",
     delete: "削除",
+    open: "開く",
+    openInNewTab: "新しいタブで開く",
   },
 }

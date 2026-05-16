@@ -258,5 +258,7 @@ export default {
     creating: "Creating...",
     saving: "Saving...",
     delete: "Delete",
+    open: "Open",
+    openInNewTab: "Open in new tab",
   },
 }
