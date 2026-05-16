@@ -6,26 +6,25 @@ import {
   useIntersectionObserver,
   useDropZone,
 } from "@vueuse/core"
-import { useInfiniteFiles } from "@/composables/useInfiniteFiles"
+import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
 import { filesService } from "@/services/files"
 import { toast } from "vue-sonner"
-import type { ApiError, UploadItem } from "@/types"
+import type { ApiError, UploadItem, File } from "@/types"
 import {
   ArrowDown,
   ArrowUp,
   Check,
   FileIcon,
   Files,
-  Loader2,
   RefreshCw,
   Search,
+  SearchIcon,
   Upload,
 } from "lucide-vue-next"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -35,12 +34,20 @@ import {
 } from "@/components/ui/select"
 import AppLayout from "@/components/layout/AppLayout.vue"
 import FileCard from "@/components/files/FileCard.vue"
+import { Spinner } from "@/components/ui/spinner"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
+import { ButtonGroup } from "@/components/ui/button-group"
+import FilesToolbar from "@/components/files/FilesToolbar.vue"
 
 const PAGE_SIZE = 20
 
 const { t } = useI18n()
-const { files, loading, loadingMore, error, hasMore, fetchFiles, loadMore } =
-  useInfiniteFiles()
+const { entities, loading, loadingMore, error, fetchEntities, loadMore } =
+  useInfiniteEntities<File>(filesService)
 
 const query = ref("")
 const sortBy = ref("created_at")
@@ -56,7 +63,7 @@ const params = computed(() => ({
 }))
 
 async function loadFiles() {
-  await fetchFiles(params.value)
+  await fetchEntities(params.value)
 }
 
 const uploadQueue = ref<UploadItem[]>([])
@@ -75,7 +82,8 @@ async function uploadFile(file: globalThis.File) {
       item.progress = percent
     })
     item.status = "done"
-    files.value.unshift(response.data)
+    entities.value = [response.data, ...entities.value]
+    toast.success(t("files.upload.uploaded"))
   } catch (e) {
     item.status = "error"
     if (e && typeof e === "object" && "detail" in e)
@@ -120,7 +128,7 @@ async function handleDownload(id: string) {
 async function handleDelete(id: string) {
   try {
     await filesService.remove(id)
-    files.value = files.value.filter((f) => f.id !== id)
+    entities.value = entities.value.filter((f) => f.id !== id)
     toast.success(t("files.delete.deleted"))
   } catch (e) {
     if (e && typeof e === "object" && "detail" in e)
@@ -145,7 +153,7 @@ onMounted(loadFiles)
   <AppLayout>
     <div
       ref="dropZoneRef"
-      class="flex flex-col gap-4 p-6 min-h-full relative container"
+      class="flex flex-col gap-4 min-h-full relative container"
     >
       <div
         v-if="isOverDropZone"
@@ -156,47 +164,13 @@ onMounted(loadFiles)
         </p>
       </div>
 
-      <div class="flex items-center gap-2">
-        <div class="relative flex-1">
-          <Search
-            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none"
-          />
-          <Input
-            v-model="query"
-            :placeholder="t('files.search')"
-            class="pl-9 focus-visible:ring-1"
-          />
-        </div>
-        <Select v-model="sortBy">
-          <SelectTrigger class="flex-1">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="created_at">
-              {{ t("files.sort.createdAt") }}
-            </SelectItem>
-            <SelectItem value="original_name">
-              {{ t("files.sort.name") }}
-            </SelectItem>
-            <SelectItem value="size">{{ t("files.sort.size") }}</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button
-          variant="outline"
-          size="icon"
-          @click="orderBy = orderBy === 'DESC' ? 'ASC' : 'DESC'"
-        >
-          <ArrowUp
-            v-if="orderBy === 'ASC'"
-            class="w-4 h-4 pointer-events-none"
-          />
-          <ArrowDown v-else class="w-4 h-4 pointer-events-none" />
-        </Button>
-        <Button @click="openFilePicker">
-          <Upload class="w-4 h-4 mr-2 pointer-events-none" />
-          {{ t("common.upload") }}
-        </Button>
-      </div>
+      <FilesToolbar
+        v-model:query="query"
+        v-model:order-by="orderBy"
+        v-model:sort-by="sortBy"
+        v-model:loading="loading"
+        @upload-click="openFilePicker"
+      />
 
       <div v-if="uploadQueue.length > 0" class="flex flex-col gap-2">
         <div
@@ -231,7 +205,6 @@ onMounted(loadFiles)
         </Card>
       </div>
 
-      <!-- error -->
       <div
         v-else-if="error"
         class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
@@ -243,10 +216,9 @@ onMounted(loadFiles)
         </Button>
       </div>
 
-      <!-- files grid -->
       <div v-else>
         <div
-          v-if="files.length === 0"
+          v-if="entities.length === 0"
           class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
         >
           <Files class="w-12 h-12" />
@@ -261,7 +233,7 @@ onMounted(loadFiles)
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           <FileCard
-            v-for="file in files"
+            v-for="file in entities"
             :key="file.id"
             :file="file"
             @download="handleDownload"
@@ -271,7 +243,7 @@ onMounted(loadFiles)
 
         <div ref="sentinel" class="h-1" />
         <div v-if="loadingMore" class="flex justify-center py-4">
-          <Loader2 class="w-4 h-4 animate-spin text-muted-foreground" />
+          <Spinner />
         </div>
       </div>
     </div>

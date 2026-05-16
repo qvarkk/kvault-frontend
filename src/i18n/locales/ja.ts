@@ -103,6 +103,7 @@ export default {
     onlyPdf: "PDFファイルのみアップロード可能です",
     upload: {
       first: "最初のファイルをアップロードしましょう",
+      uploaded: "ファイルは正常にアップロードしました",
     },
     delete: {
       title: "ファイルを削除しますか？",

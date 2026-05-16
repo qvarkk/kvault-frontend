@@ -104,6 +104,7 @@ export default {
     onlyPdf: "Поддерживаются только PDF файлы",
     upload: {
       first: "Загрузите ваш первый файл",
+      uploaded: "Файл успешно загружен",
     },
     delete: {
       title: "Удалить файл?",

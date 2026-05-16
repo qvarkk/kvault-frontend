@@ -102,6 +102,7 @@ export default {
     onlyPdf: "Only PDF files are allowed",
     upload: {
       first: "Upload your first file",
+      uploaded: "File uploaded successfully",
     },
     delete: {
       title: "Delete file?",
