@@ -1,6 +1,12 @@
 import { ref } from "vue"
 import { notesService } from "@/services/notes"
-import type { Note, NoteUpdatePayload, BindTagPayload, ApiError } from "@/types"
+import type {
+  Note,
+  NoteUpdatePayload,
+  BindTagPayload,
+  ApiError,
+  Tag,
+} from "@/types"
 
 export function useNote() {
   const note = ref<Note | null>(null)
@@ -34,10 +40,14 @@ export function useNote() {
     }
   }
 
-  async function bindTag(itemId: string, payload: BindTagPayload) {
-    await notesService.bindTag(itemId, payload)
-    const tagged = await notesService.getById(itemId)
-    note.value = tagged.data
+  async function bindTag(itemId: string, tag: Tag) {
+    await notesService.bindTag(itemId, { tag_id: tag.id })
+    if (note.value) {
+      note.value = {
+        ...note.value,
+        tags: [...note.value.tags, tag],
+      }
+    }
   }
 
   async function unbindTag(itemId: string, tagId: string) {

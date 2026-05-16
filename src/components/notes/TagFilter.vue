@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useTags } from "@/composables/useTags"
 import { useIntersectionObserver, watchDebounced } from "@vueuse/core"
 import { onMounted, ref } from "vue"
 import { useI18n } from "vue-i18n"
@@ -11,47 +10,23 @@ import { Input } from "../ui/input"
 import Separator from "../ui/separator/Separator.vue"
 import { tagsService } from "@/services/tags"
 import { Spinner } from "../ui/spinner"
+import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
+import type { Tag } from "@/types"
 
 const PAGE_SIZE = 20
 
 const { t } = useI18n()
-const { tags, loading, error, fetchTags } = useTags()
+const { entities, loading, loadingMore, error, fetchEntities, loadMore } =
+  useInfiniteEntities<Tag>(tagsService)
 
-const page = ref(1)
-const hasMore = ref(true)
-const loadingMore = ref(false)
 const sentinel = ref<HTMLElement | null>(null)
+const scrollContainer = ref<HTMLElement | null>(null)
 
 const search = ref("")
 const tagIds = defineModel<string[]>("tagIds", { default: [] })
 
 async function fetch() {
-  page.value = 1
-  hasMore.value = true
-  tags.value = []
-  await fetchTags({ q: search.value, page_size: PAGE_SIZE })
-}
-
-async function fetchMore() {
-  if (!hasMore.value || loadingMore.value || loading.value) return
-  loadingMore.value = true
-  try {
-    page.value++
-    const response = await tagsService.list({
-      q: search.value,
-      page: page.value,
-      page_size: PAGE_SIZE,
-    })
-    tags.value = [...tags.value, ...response.data.data]
-    hasMore.value =
-      response.data.page * response.data.pageSize < response.data.total
-  } finally {
-    loadingMore.value = false
-  }
-}
-
-function retry() {
-  fetch()
+  await fetchEntities({ q: search.value, page_size: PAGE_SIZE })
 }
 
 function toggleTag(id: string) {
@@ -68,9 +43,16 @@ function clear() {
   tagIds.value = []
 }
 
-useIntersectionObserver(sentinel, ([entry]) => {
-  if (entry?.isIntersecting) fetchMore()
-})
+useIntersectionObserver(
+  sentinel,
+  ([entry]) => {
+    if (entry?.isIntersecting) loadMore({ page_size: PAGE_SIZE })
+  },
+  {
+    root: scrollContainer,
+    rootMargin: "0px 0px 10px 0px",
+  },
+)
 watchDebounced(search, fetch, { debounce: 400 })
 onMounted(fetch)
 </script>
@@ -101,9 +83,9 @@ onMounted(fetch)
         <Delete class="w-4 h-4" />
       </button>
       <Separator />
-      <div class="flex flex-col max-h-48 overflow-y-auto">
+      <div ref="scrollContainer" class="flex flex-col max-h-48 overflow-y-auto">
         <button
-          v-for="tag in tags"
+          v-for="tag in entities"
           :key="tag.id"
           @click="toggleTag(tag.id)"
           class="flex items-center justify-between px-2 py-1.5 rounded-md hover:bg-accent text-sm"
@@ -111,19 +93,22 @@ onMounted(fetch)
           <span>{{ tag.name }}</span>
           <Check v-if="isSelected(tag.id)" class="w-4 h-4" />
         </button>
+
         <div ref="sentinel" class="h-1" />
+
         <div v-if="loading || loadingMore" class="flex justify-center py-4">
           <Spinner />
         </div>
+
         <div v-if="error" class="flex flex-col items-center gap-2 py-2">
           <p class="text-xs text-destructive">{{ error.detail }}</p>
-          <Button variant="ghost" size="sm" @click="retry">
+          <Button variant="ghost" size="sm" @click="fetch">
             <RefreshCw class="w-3 h-3 mr-1 pointer-events-none" />
             {{ t("common.retry") }}
           </Button>
         </div>
         <p
-          v-if="tags.length === 0 && !loading && !error"
+          v-if="entities.length === 0 && !loading && !error"
           class="text-sm text-muted-foreground text-center py-2"
         >
           {{ t("notes.tags.none") }}

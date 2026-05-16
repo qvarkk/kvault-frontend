@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue"
 import { useI18n } from "vue-i18n"
-import { Plus, Loader2, RefreshCw } from "lucide-vue-next"
+import { Plus, RefreshCw } from "lucide-vue-next"
 import { watchDebounced, useIntersectionObserver } from "@vueuse/core"
-import { useTags } from "@/composables/useTags"
 import { tagsService } from "@/services/tags"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -12,12 +11,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import type { ApiError } from "@/types"
+import type { ApiError, Tag } from "@/types"
 import { toast } from "vue-sonner"
+import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
+import { Spinner } from "../ui/spinner"
 
-const PAGE_SIZE = 20
-
-const { t } = useI18n()
+const PAGE_SIZE = 8
 
 const props = defineProps<{
   noteId: string
@@ -25,75 +24,62 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  bind: [tagId: string]
+  bind: [tag: Tag]
 }>()
 
-const { tags, loading, error, fetchTags } = useTags()
+const { t } = useI18n()
+const { entities, loading, loadingMore, error, fetchEntities, loadMore } =
+  useInfiniteEntities<Tag>(tagsService)
+
 const search = ref("")
-const page = ref(1)
-const hasMore = ref(true)
-const loadingMore = ref(false)
+const params = computed(() => ({
+  q: search.value,
+  page_size: PAGE_SIZE,
+}))
+
 const sentinel = ref<HTMLElement | null>(null)
 
-async function loadTags() {
-  page.value = 1
-  hasMore.value = true
-  tags.value = []
-  await fetchTags({ q: search.value, page_size: PAGE_SIZE })
-}
-
-async function loadMore() {
-  if (!hasMore.value || loadingMore.value || loading.value) return
-  loadingMore.value = true
-  try {
-    page.value++
-    const response = await tagsService.list({
-      q: search.value,
-      page: page.value,
-      page_size: PAGE_SIZE,
-    })
-    tags.value = [...tags.value, ...response.data.data]
-    hasMore.value =
-      response.data.page * response.data.pageSize < response.data.total
-  } catch (e) {
-    toast.error((e as ApiError).detail)
-  } finally {
-    loadingMore.value = false
-  }
+async function fetch() {
+  await fetchEntities(params.value)
 }
 
 async function handleCreate() {
   if (!search.value.trim()) return
   try {
     const response = await tagsService.create(search.value.trim())
-    emit("bind", response.data.id)
+    emit("bind", response.data)
     search.value = ""
-    await loadTags()
+    await fetch()
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
   }
 }
 
-async function handleBind(tagId: string) {
-  emit("bind", tagId)
+async function handleBind(tag: Tag) {
+  emit("bind", tag)
 }
 
 const unbound = computed(() =>
-  tags.value.filter((t) => !props.boundTagIds.includes(t.id)),
+  entities.value.filter((t) => !props.boundTagIds.includes(t.id)),
 )
 
 const exactMatch = computed(() =>
-  tags.value.some((t) => t.name.toLowerCase() === search.value.toLowerCase()),
+  entities.value.some(
+    (t) => t.name.toLowerCase() === search.value.toLowerCase(),
+  ),
 )
 
 useIntersectionObserver(sentinel, ([entry]) => {
-  if (entry && entry.isIntersecting) {
-    loadMore()
-  }
+  if (entry?.isIntersecting) loadMore(params.value)
 })
 
-watchDebounced(search, loadTags, { debounce: 400 })
-onMounted(loadTags)
+watchDebounced(search, fetch, { debounce: 400 })
+onMounted(fetch)
 </script>
 
 <template>
@@ -116,12 +102,12 @@ onMounted(loadTags)
       />
 
       <div v-if="loading" class="flex justify-center py-4">
-        <Loader2 class="w-4 h-4 animate-spin text-muted-foreground" />
+        <Spinner />
       </div>
 
       <div v-else-if="error" class="flex flex-col items-center gap-2 py-2">
         <p class="text-xs text-destructive">{{ error.detail }}</p>
-        <Button variant="ghost" size="sm" @click="loadTags">
+        <Button variant="ghost" size="sm" @click="fetch">
           <RefreshCw class="w-3 h-3 mr-1 pointer-events-none" />
           {{ t("common.retry") }}
         </Button>
@@ -131,7 +117,7 @@ onMounted(loadTags)
         <button
           v-for="tag in unbound"
           :key="tag.id"
-          @click="handleBind(tag.id)"
+          @click="handleBind(tag)"
           class="flex items-center px-2 py-1.5 rounded-md hover:bg-accent text-sm cursor-pointer text-left"
         >
           {{ tag.name }}
@@ -146,9 +132,11 @@ onMounted(loadTags)
             {{ t("notes.tags.create", { name: search }) }}
           </Button>
         </p>
+
         <div ref="sentinel" class="h-1" />
+
         <div v-if="loadingMore" class="flex justify-center py-2">
-          <Loader2 class="w-4 h-4 animate-spin text-muted-foreground" />
+          <Spinner />
         </div>
       </div>
     </PopoverContent>

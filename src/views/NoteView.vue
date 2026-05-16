@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n"
 import { useDark, useDebounceFn, useMediaQuery } from "@vueuse/core"
 import { useNote } from "@/composables/useNote"
 import { toast } from "vue-sonner"
-import type { ApiError } from "@/types"
+import type { ApiError, Tag } from "@/types"
 import AppLayout from "@/components/layout/AppLayout.vue"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
@@ -86,10 +86,10 @@ async function handleTitleChange() {
   }
 }
 
-async function handleBindTag(tagId: string) {
+async function handleBindTag(tag: Tag) {
   if (!note.value) return
   try {
-    await bindTag(note.value.id, { tag_id: tagId })
+    await bindTag(note.value.id, tag)
   } catch (e) {
     if (e && typeof e === "object" && "detail" in e)
       toast.error((e as ApiError).detail)
