@@ -5,8 +5,10 @@ import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { AlertCircleIcon, ExternalLink } from "lucide-vue-next"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useHead } from "@vueuse/head"
 
 const { t } = useI18n()
+useHead({ title: t("head.about") })
 
 const stack = {
   frontend: [

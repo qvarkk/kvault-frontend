@@ -10,42 +10,21 @@ import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
 import { filesService } from "@/services/files"
 import { toast } from "vue-sonner"
 import type { ApiError, UploadItem, File } from "@/types"
-import {
-  ArrowDown,
-  ArrowUp,
-  Check,
-  FileIcon,
-  Files,
-  RefreshCw,
-  Search,
-  SearchIcon,
-  Upload,
-} from "lucide-vue-next"
+import { Check, FileIcon, Files, RefreshCw } from "lucide-vue-next"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import AppLayout from "@/components/layout/AppLayout.vue"
 import FileCard from "@/components/files/FileCard.vue"
 import { Spinner } from "@/components/ui/spinner"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group"
-import { ButtonGroup } from "@/components/ui/button-group"
 import FilesToolbar from "@/components/files/FilesToolbar.vue"
+import { useHead } from "@vueuse/head"
 
 const PAGE_SIZE = 20
 
 const { t } = useI18n()
+useHead({ title: t("head.files") })
 const { entities, loading, loadingMore, error, fetchEntities, loadMore } =
   useInfiniteEntities<File>(filesService)
 

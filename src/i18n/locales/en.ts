@@ -24,6 +24,10 @@ export default {
     login: "Login",
     signUp: "Sign Up",
     home: "Home",
+    notes: "Notes",
+    note: "Note",
+    files: "Files",
+    about: "About",
   },
   nav: {
     home: "Home",

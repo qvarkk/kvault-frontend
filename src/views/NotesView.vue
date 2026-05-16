@@ -10,6 +10,7 @@ import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
 import { notesService } from "@/services/notes"
 import type { Note } from "@/types"
 import { useIntersectionObserver, watchDebounced } from "@vueuse/core"
+import { useHead } from "@vueuse/head"
 import { NotebookPen, Plus, RefreshCw } from "lucide-vue-next"
 import { computed, onMounted, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
@@ -17,6 +18,7 @@ import { useI18n } from "vue-i18n"
 const PAGE_SIZE = 20
 
 const { t } = useI18n()
+useHead({ title: t("head.notes") })
 
 const query = ref("")
 const sortBy = ref("updated_at")

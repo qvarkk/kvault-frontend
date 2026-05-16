@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue"
+import { ref, onMounted, watch, watchEffect } from "vue"
 import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useDark, useDebounceFn, useMediaQuery } from "@vueuse/core"
@@ -11,7 +11,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
-  Ban,
   Check,
   Loader2,
   RefreshCw,
@@ -27,7 +26,6 @@ import { Badge } from "@/components/ui/badge"
 import "md-editor-v3/lib/style.css"
 import NoteEditor from "@/components/notes/NoteEditor.vue"
 import NoteTagSelector from "@/components/notes/NoteTagSelector.vue"
-import i18n from "@/i18n"
 import {
   Popover,
   PopoverContent,
@@ -42,6 +40,7 @@ import {
 } from "@/components/ui/number-field"
 import { notesService } from "@/services/notes"
 import EditorShortcutsHelper from "@/components/notes/EditorShortcutsHelper.vue"
+import { useHead } from "@vueuse/head"
 
 const props = defineProps<{
   id: string
@@ -177,6 +176,10 @@ watch(content, (newValue, oldValue) => {
   if (newValue === oldValue) return
   changed.value = true
   debouncedSave()
+})
+
+watchEffect(() => {
+  useHead({ title: note.value?.title ?? t("head.note") })
 })
 </script>
 

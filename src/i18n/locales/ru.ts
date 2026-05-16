@@ -24,6 +24,10 @@ export default {
     login: "Вход",
     signUp: "Регистрация",
     home: "Главная",
+    notes: "Заметки",
+    note: "Заметка",
+    files: "Файлы",
+    about: "О приложении",
   },
   nav: {
     home: "Главная",

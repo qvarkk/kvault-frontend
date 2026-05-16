@@ -24,6 +24,10 @@ export default {
     login: "ログイン",
     signUp: "新規登録",
     home: "マイページ",
+    notes: "ノート",
+    note: "ノート",
+    files: "ファイル",
+    about: "アプリについて",
   },
   nav: {
     home: "マイページ",
