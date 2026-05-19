@@ -14,6 +14,7 @@ import {
   Check,
   Loader2,
   RefreshCw,
+  Sparkles,
   Sticker,
   Trash2,
   Undo2,
@@ -122,7 +123,7 @@ async function handleAutotag() {
       note.value.id,
       autotagCount.value,
     )
-    for (const tag of response.data) {
+    for (const tag of response.data.data) {
       await new Promise((resolve) => setTimeout(resolve, 250))
       if (!note.value.tags.find((t) => t.id === tag.id)) {
         note.value.tags.push(tag)
@@ -297,8 +298,15 @@ watchEffect(() => {
           :key="tag.id"
           variant="outline"
           class="flex items-center gap-1 py-0 h-6 cursor-pointer"
+          :class="tag.source === 'auto'
+            ? 'border-violet-400/60 text-violet-700 dark:text-violet-300 bg-gradient-to-r from-violet-500/10 to-cyan-500/10'
+            : ''"
           @click="handleUnbindTag(tag.id)"
         >
+          <Sparkles
+            v-if="tag.source === 'auto'"
+            class="w-3 h-3 shrink-0 pointer-events-none text-violet-500"
+          />
           <span class="pointer-events-none">
             {{ tag.name }}
           </span>

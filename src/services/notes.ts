@@ -1,10 +1,11 @@
 import http from "./http"
 import type {
   BindTagPayload,
+  Listed,
   Note,
   NoteUpdatePayload,
   Paginated,
-  Tag,
+  TagRef,
 } from "@/types"
 
 export const notesService = {
@@ -41,7 +42,7 @@ export const notesService = {
   },
 
   autotag(id: string, number: number) {
-    return http.post<Tag[]>(`/items/${id}/autotag`, { number })
+    return http.post<Listed<TagRef>>(`/items/${id}/autotag`, { number })
   },
 
   listDeleted(params?: Record<string, unknown>) {

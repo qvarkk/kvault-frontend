@@ -7,13 +7,13 @@ export const authService = {
   },
 
   updatePassword(oldPassword: string, newPassword: string) {
-    return http.patch("/auth/account", {
+    return http.patch("/auth/me/password", {
       old_password: oldPassword,
       new_password: newPassword,
     })
   },
 
   deleteAccount(password: string) {
-    return http.delete("/auth/account", { data: { password } })
+    return http.post("/auth/me/delete", { password })
   },
 }

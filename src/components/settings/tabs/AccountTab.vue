@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth"
 import { authService } from "@/services/auth"
 import { toast } from "vue-sonner"
@@ -21,6 +22,7 @@ import { Switch } from "@/components/ui/switch"
 import { useEditorShortcuts } from "@/composables/useEditorShortcuts"
 
 const { t } = useI18n()
+const router = useRouter()
 const auth = useAuthStore()
 const { isHidden } = useEditorShortcuts()
 
@@ -80,6 +82,7 @@ async function handleDeleteAccount() {
   try {
     await authService.deleteAccount(deletePassword.value)
     auth.logout()
+    router.push({ name: "signUp" })
   } catch (e) {
     if (e && typeof e === "object" && "detail" in e)
       toast.error((e as ApiError).detail)

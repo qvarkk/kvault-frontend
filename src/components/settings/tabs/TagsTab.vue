@@ -238,7 +238,7 @@ onMounted(loadTags)
             {{ tag.name }}
           </span>
           <span class="text-xs text-muted-foreground shrink-0">
-            {{ t("settings.tags.fields.noteCount", { count: tag.noteCount }) }}
+            {{ t("settings.tags.fields.noteCount", { count: tag.itemCount }) }}
           </span>
         </div>
 
