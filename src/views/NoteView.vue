@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, watchEffect } from "vue"
+import { ref, computed, onMounted, watch } from "vue"
 import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useDark, useDebounceFn, useMediaQuery } from "@vueuse/core"
@@ -179,9 +179,7 @@ watch(content, (newValue, oldValue) => {
   debouncedSave()
 })
 
-watchEffect(() => {
-  useHead({ title: note.value?.title ?? t("head.note") })
-})
+useHead({ title: computed(() => note.value?.title ?? t("head.note")) })
 </script>
 
 <template>

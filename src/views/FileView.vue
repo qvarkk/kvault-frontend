@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watchEffect } from "vue"
+import { ref, computed, onMounted, onUnmounted } from "vue"
 import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { filesService } from "@/services/files"
@@ -23,9 +23,7 @@ const error = ref<ApiError | null>(null)
 const viewData = ref<PresignedUrl | null>(null)
 const blobUrl = ref<string | null>(null)
 
-watchEffect(() => {
-  useHead({ title: viewData.value?.filename ?? t("head.file") })
-})
+useHead({ title: computed(() => viewData.value?.filename ?? t("head.file")) })
 
 function revokeBlobUrl() {
   if (blobUrl.value) {
