@@ -27,6 +27,7 @@ export default {
     notes: "ノート",
     note: "ノート",
     files: "ファイル",
+    file: "ファイル",
     about: "アプリについて",
   },
   nav: {

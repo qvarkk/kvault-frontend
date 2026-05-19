@@ -42,6 +42,13 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/files/:id",
+      name: "file",
+      component: () => import("@/views/FileView.vue"),
+      meta: { requiresAuth: true },
+      props: true,
+    },
+    {
       path: "/about",
       name: "about",
       component: () => import("@/views/AboutView.vue"),

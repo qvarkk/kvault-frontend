@@ -1,5 +1,5 @@
 import http from "./http"
-import type { File, Paginated } from "@/types"
+import type { File, Paginated, PresignedUrl } from "@/types"
 
 export const filesService = {
   list(params?: Record<string, unknown>) {
@@ -8,6 +8,10 @@ export const filesService = {
 
   getDownloadUrl(id: string) {
     return http.get<{ url: string }>(`/files/${id}`)
+  },
+
+  getViewUrl(id: string) {
+    return http.get<PresignedUrl>(`/files/${id}/view`)
   },
 
   upload(file: globalThis.File, onProgress?: (percent: number) => void, signal?: AbortSignal) {

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { useI18n } from "vue-i18n"
-import { FileText, Download, Trash2, Ellipsis, RotateCcw } from "lucide-vue-next"
+import { useRouter } from "vue-router"
+import { FileText, Download, Trash2, Ellipsis, RotateCcw, ExternalLink, ArrowRight } from "lucide-vue-next"
 import {
   Card,
   CardHeader,
@@ -32,6 +33,7 @@ import type { File } from "@/types"
 import { timeAgo } from "@/services/format"
 
 const { t } = useI18n()
+const router = useRouter()
 
 const props = defineProps<{
   file: File
@@ -45,6 +47,16 @@ const emit = defineEmits<{
 }>()
 
 const deleteOpen = ref(false)
+
+const clickable = computed(() => !props.trash)
+
+function openFile() {
+  router.push({ name: "file", params: { id: props.file.id } })
+}
+
+function openFileInNewTab() {
+  window.open(`/files/${props.file.id}`, "_blank")
+}
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -64,8 +76,14 @@ const statusVariant: Record<
 </script>
 
 <template>
-  <Card class="flex flex-col gap-2 p-4">
-    <CardHeader class="p-0 flex flex-row items-start justify-between">
+  <Card
+    class="flex flex-col gap-2 p-4 transition-shadow hover:shadow-md dark:transition-colors dark:hover:bg-accent"
+    :class="clickable ? 'cursor-pointer' : 'cursor-default'"
+    @click.prevent="clickable && openFile()"
+    @mousedown.middle.prevent="clickable && openFileInNewTab()"
+    @auxclick.middle="clickable && openFileInNewTab()"
+  >
+    <CardHeader class="p-0 flex flex-row items-start justify-between pointer-events-none">
       <div class="flex items-center gap-2 min-w-0">
         <FileText
           class="w-4 h-4 shrink-0 text-muted-foreground pointer-events-none"
@@ -74,7 +92,7 @@ const statusVariant: Record<
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger as-child @click.stop>
-          <Button variant="ghost" size="icon" class="w-6 h-6 shrink-0">
+          <Button variant="ghost" size="icon" class="w-6 h-6 shrink-0 pointer-events-auto">
             <Ellipsis class="w-4 h-4 pointer-events-none" />
           </Button>
         </DropdownMenuTrigger>
@@ -91,9 +109,17 @@ const statusVariant: Record<
             </DropdownMenuItem>
           </template>
           <template v-else>
+            <DropdownMenuItem @click="openFileInNewTab" :disabled="!clickable">
+              <ExternalLink class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("common.openInNewTab") }}
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="openFile" :disabled="!clickable">
+              <ArrowRight class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("common.open") }}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               @click="emit('download', file.id)"
-              :disabled="file.status !== 'ready'"
             >
               <Download class="w-4 h-4 mr-2 pointer-events-none" />
               {{ t("files.download") }}
@@ -108,7 +134,7 @@ const statusVariant: Record<
       </DropdownMenu>
     </CardHeader>
 
-    <CardContent class="p-0 flex flex-col gap-1">
+    <CardContent class="p-0 flex flex-col gap-1 pointer-events-none">
       <div class="flex items-center gap-2">
         <Badge :variant="statusVariant[file.status]" class="text-xs">
           {{ t(`files.status.${file.status}`) }}
@@ -119,20 +145,10 @@ const statusVariant: Record<
       </div>
     </CardContent>
 
-    <CardFooter class="p-0 flex items-center justify-between">
+    <CardFooter class="p-0 flex items-center justify-between pointer-events-none">
       <span class="text-xs text-muted-foreground">{{
         timeAgo(file.createdAt)
       }}</span>
-      <Button
-        v-if="!trash"
-        variant="outline"
-        size="sm"
-        :disabled="file.status !== 'ready'"
-        @click="emit('download', file.id)"
-      >
-        <Download class="w-3 h-3 mr-1 pointer-events-none" />
-        {{ t("files.download") }}
-      </Button>
     </CardFooter>
   </Card>
 

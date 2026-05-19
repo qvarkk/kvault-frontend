@@ -27,6 +27,7 @@ export default {
     notes: "Заметки",
     note: "Заметка",
     files: "Файлы",
+    file: "Файл",
     about: "О приложении",
   },
   nav: {

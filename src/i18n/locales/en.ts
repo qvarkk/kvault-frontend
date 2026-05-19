@@ -27,6 +27,7 @@ export default {
     notes: "Notes",
     note: "Note",
     files: "Files",
+    file: "File",
     about: "About",
   },
   nav: {
