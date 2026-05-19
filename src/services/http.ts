@@ -22,6 +22,8 @@ http.interceptors.request.use((config) => {
     config.headers.Authorization = token
   }
 
+  config.headers["Accept-Language"] = i18n.global.locale.value
+
   return config
 })
 

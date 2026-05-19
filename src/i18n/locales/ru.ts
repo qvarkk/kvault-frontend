@@ -222,6 +222,7 @@ export default {
         new: "Новый Пароль",
         changed: "Пароль успешно изменен",
       },
+      passwordChanged: "Пароль успешно изменен",
       delete: {
         title: "Удалить аккаунт",
         description:
@@ -266,6 +267,10 @@ export default {
       },
       add: {
         placeholder: "Добавить новый тег...",
+      },
+      messages: {
+        added: "Тег добавлен",
+        deleted: "Тег удалён",
       },
     },
   },

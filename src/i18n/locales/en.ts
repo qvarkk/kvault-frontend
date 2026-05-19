@@ -220,6 +220,7 @@ export default {
         new: "New Password",
         changed: "Password changed successfully",
       },
+      passwordChanged: "Password changed successfully",
       delete: {
         title: "Delete Account",
         description:
@@ -264,6 +265,10 @@ export default {
       },
       add: {
         placeholder: "Add new tag...",
+      },
+      messages: {
+        added: "Tag added",
+        deleted: "Tag deleted",
       },
     },
   },

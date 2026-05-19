@@ -221,6 +221,7 @@ export default {
         new: "新しいパスワード",
         changed: "パスワード正常に変更しました",
       },
+      passwordChanged: "パスワードを正常に変更しました",
       delete: {
         title: "アカウント削除",
         description:
@@ -265,6 +266,10 @@ export default {
       },
       add: {
         placeholder: "新しいタグを追加...",
+      },
+      messages: {
+        added: "タグを追加しました",
+        deleted: "タグを削除しました",
       },
     },
   },
