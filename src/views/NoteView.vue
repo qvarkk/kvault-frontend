@@ -296,9 +296,11 @@ useHead({ title: computed(() => note.value?.title ?? t("head.note")) })
           :key="tag.id"
           variant="outline"
           class="flex items-center gap-1 py-0 h-6 cursor-pointer"
-          :class="tag.source === 'auto'
-            ? 'border-violet-400/60 text-violet-700 dark:text-violet-300 bg-gradient-to-r from-violet-500/10 to-cyan-500/10'
-            : ''"
+          :class="
+            tag.source === 'auto'
+              ? 'border-violet-400/60 text-violet-700 dark:text-violet-300 bg-linear-to-r from-violet-500/10 to-cyan-500/10'
+              : ''
+          "
           @click="handleUnbindTag(tag.id)"
         >
           <Sparkles
