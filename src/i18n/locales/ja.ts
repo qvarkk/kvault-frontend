@@ -153,6 +153,7 @@ export default {
     upload: {
       first: "最初のファイルをアップロードしましょう",
       uploaded: "ファイルは正常にアップロードしました",
+      clearFinished: "完了済みをクリア",
     },
     delete: {
       title: "ファイルを削除しますか？",

@@ -152,6 +152,7 @@ export default {
     upload: {
       first: "Upload your first file",
       uploaded: "File uploaded successfully",
+      clearFinished: "Clear finished",
     },
     delete: {
       title: "Delete file?",

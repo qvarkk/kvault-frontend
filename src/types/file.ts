@@ -23,6 +23,6 @@ export interface UploadItem {
   id: string
   name: string
   progress: number
-  status: "uploading" | "done" | "error"
+  status: "uploading" | "done" | "error" | "cancelled"
   error?: string
 }

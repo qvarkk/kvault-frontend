@@ -10,10 +10,11 @@ export const filesService = {
     return http.get<{ url: string }>(`/files/${id}`)
   },
 
-  upload(file: globalThis.File, onProgress?: (percent: number) => void) {
+  upload(file: globalThis.File, onProgress?: (percent: number) => void, signal?: AbortSignal) {
     const formData = new FormData()
     formData.append("file", file)
     return http.post<File>("/files/upload", formData, {
+      signal,
       headers: { "Content-Type": "multipart/form-data" },
       onUploadProgress(event) {
         if (onProgress && event.total) {

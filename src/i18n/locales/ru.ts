@@ -154,6 +154,7 @@ export default {
     upload: {
       first: "Загрузите ваш первый файл",
       uploaded: "Файл успешно загружен",
+      clearFinished: "Очистить завершённые",
     },
     delete: {
       title: "Удалить файл?",

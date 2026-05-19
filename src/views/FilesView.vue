@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue"
+import { ref, computed, onMounted, onUnmounted, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import {
   watchDebounced,
@@ -10,7 +10,7 @@ import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
 import { filesService } from "@/services/files"
 import { toast } from "vue-sonner"
 import type { ApiError, UploadItem, File } from "@/types"
-import { Check, FileIcon, Files, RefreshCw, Trash2 } from "lucide-vue-next"
+import { Check, FileIcon, Files, RefreshCw, Trash2, X } from "lucide-vue-next"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card } from "@/components/ui/card"
@@ -67,6 +67,23 @@ async function loadFiles() {
 }
 
 const uploadQueue = ref<UploadItem[]>([])
+const uploadControllers = new Map<string, AbortController>()
+
+const hasFinishedUploads = computed(() =>
+  uploadQueue.value.some(i => i.status !== "uploading")
+)
+
+function clearFinished() {
+  uploadQueue.value = uploadQueue.value.filter(i => i.status === "uploading")
+}
+
+function cancelUpload(itemId: string) {
+  const item = uploadQueue.value.find(i => i.id === itemId)
+  if (!item) return
+  item.status = "cancelled"
+  uploadControllers.get(itemId)?.abort()
+  uploadControllers.delete(itemId)
+}
 
 async function uploadFile(file: globalThis.File) {
   const item: UploadItem = {
@@ -77,20 +94,32 @@ async function uploadFile(file: globalThis.File) {
   }
   uploadQueue.value.push(item)
 
+  const controller = new AbortController()
+  uploadControllers.set(item.id, controller)
+
   try {
-    const response = await filesService.upload(file, (percent) => {
-      item.progress = percent
-    })
+    const response = await filesService.upload(
+      file,
+      (percent) => { item.progress = percent },
+      controller.signal,
+    )
+    uploadControllers.delete(item.id)
     item.status = "done"
     entities.value = [response.data, ...entities.value]
     toast.success(t("files.upload.uploaded"))
   } catch (e) {
+    uploadControllers.delete(item.id)
+    if (item.status === "cancelled") return
     item.status = "error"
     if (e && typeof e === "object" && "detail" in e)
       item.error = (e as ApiError).detail
     else item.error = t("errors.internal.title")
   }
 }
+
+onUnmounted(() => {
+  uploadControllers.forEach(c => c.abort())
+})
 
 async function handleFiles(incoming: globalThis.File[] | FileList | null) {
   if (trashMode.value || !incoming) return
@@ -239,7 +268,18 @@ onMounted(loadFiles)
         @upload-click="openFilePicker"
       />
 
-      <div v-if="uploadQueue.length > 0 && !trashMode" class="flex flex-col gap-2">
+      <div v-if="uploadQueue.length > 0 && !trashMode" class="flex flex-col gap-1">
+        <div class="flex justify-end">
+          <Button
+            v-if="hasFinishedUploads"
+            variant="ghost"
+            size="sm"
+            class="text-muted-foreground"
+            @click="clearFinished"
+          >
+            {{ t("files.upload.clearFinished") }}
+          </Button>
+        </div>
         <div
           v-for="item in uploadQueue"
           :key="item.id"
@@ -252,12 +292,24 @@ onMounted(loadFiles)
           <span v-if="item.status === 'error'" class="text-xs text-destructive">
             {{ item.error }}
           </span>
+          <span v-else-if="item.status === 'cancelled'" class="text-xs text-muted-foreground">
+            {{ t("common.cancel") }}
+          </span>
           <Progress
             v-else-if="item.status === 'uploading'"
             :value="item.progress"
             class="w-24"
           />
           <Check v-else class="w-4 h-4 text-green-500 pointer-events-none" />
+          <Button
+            v-if="item.status === 'uploading'"
+            variant="ghost"
+            size="icon"
+            class="w-6 h-6 shrink-0"
+            @click="cancelUpload(item.id)"
+          >
+            <X class="w-3 h-3 pointer-events-none" />
+          </Button>
         </div>
       </div>
 
