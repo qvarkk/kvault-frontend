@@ -98,6 +98,26 @@ export default {
       exportPdfErrorTitle: "Unexpected error",
       exportPdfErrorDescription: "Unknown error occured while exporting PDF",
     },
+    trash: {
+      toggle: "Trash",
+      empty: "Trash is empty",
+      emptyAction: "Empty Trash",
+      restore: "Restore",
+      deletePermanently: "Delete Permanently",
+      deleteConfirm: {
+        title: "Delete permanently?",
+        description: "This action cannot be undone.",
+        action: "Delete Forever",
+      },
+      emptyConfirm: {
+        title: "Empty trash?",
+        description: "All items will be permanently deleted. This cannot be undone.",
+        action: "Empty Trash",
+      },
+      restored: "Note restored",
+      deletedPermanently: "Note deleted permanently",
+      emptied: "Trash emptied",
+    },
   },
   shortcuts: {
     title: "keyboard shortcuts",
@@ -148,6 +168,26 @@ export default {
       createdAt: "Date uploaded",
       name: "Name",
       size: "Size",
+    },
+    trash: {
+      toggle: "Trash",
+      empty: "Trash is empty",
+      emptyAction: "Empty Trash",
+      restore: "Restore",
+      deletePermanently: "Delete Permanently",
+      deleteConfirm: {
+        title: "Delete permanently?",
+        description: "This action cannot be undone.",
+        action: "Delete Forever",
+      },
+      emptyConfirm: {
+        title: "Empty trash?",
+        description: "All files will be permanently deleted. This cannot be undone.",
+        action: "Empty Trash",
+      },
+      restored: "File restored",
+      deletedPermanently: "File deleted permanently",
+      emptied: "Trash emptied",
     },
   },
   settings: {

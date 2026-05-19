@@ -10,11 +10,21 @@ import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
 import { filesService } from "@/services/files"
 import { toast } from "vue-sonner"
 import type { ApiError, UploadItem, File } from "@/types"
-import { Check, FileIcon, Files, RefreshCw } from "lucide-vue-next"
+import { Check, FileIcon, Files, RefreshCw, Trash2 } from "lucide-vue-next"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import AppLayout from "@/components/layout/AppLayout.vue"
 import FileCard from "@/components/files/FileCard.vue"
 import { Spinner } from "@/components/ui/spinner"
@@ -25,8 +35,19 @@ const PAGE_SIZE = 20
 
 const { t } = useI18n()
 useHead({ title: t("head.files") })
+
+const trashMode = ref(false)
+const emptyTrashDialogOpen = ref(false)
+
+const serviceProxy = {
+  list: (params?: Record<string, unknown>) =>
+    trashMode.value
+      ? filesService.listDeleted(params)
+      : filesService.list(params),
+}
+
 const { entities, loading, loadingMore, error, fetchEntities, loadMore } =
-  useInfiniteEntities<File>(filesService)
+  useInfiniteEntities<File>(serviceProxy)
 
 const query = ref("")
 const sortBy = ref("created_at")
@@ -72,7 +93,7 @@ async function uploadFile(file: globalThis.File) {
 }
 
 async function handleFiles(incoming: globalThis.File[] | FileList | null) {
-  if (!incoming) return
+  if (trashMode.value || !incoming) return
   const arr = Array.from(incoming).filter((f) => f.type === "application/pdf")
   if (arr.length === 0) {
     toast.error(t("files.onlyPdf"))
@@ -106,9 +127,45 @@ async function handleDownload(id: string) {
 
 async function handleDelete(id: string) {
   try {
-    await filesService.remove(id)
+    if (trashMode.value) {
+      await filesService.permanentDelete(id)
+      toast.success(t("files.trash.deletedPermanently"))
+    } else {
+      await filesService.remove(id)
+      toast.success(t("files.delete.deleted"))
+    }
     entities.value = entities.value.filter((f) => f.id !== id)
-    toast.success(t("files.delete.deleted"))
+  } catch (e) {
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
+  }
+}
+
+async function handleRestore(id: string) {
+  try {
+    await filesService.restore(id)
+    entities.value = entities.value.filter((f) => f.id !== id)
+    toast.success(t("files.trash.restored"))
+  } catch (e) {
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
+  }
+}
+
+async function handleEmptyTrash() {
+  try {
+    await filesService.emptyTrash()
+    toast.success(t("files.trash.emptied"))
+    emptyTrashDialogOpen.value = false
+    await loadFiles()
   } catch (e) {
     if (e && typeof e === "object" && "detail" in e)
       toast.error((e as ApiError).detail)
@@ -125,6 +182,7 @@ useIntersectionObserver(sentinel, ([entry]) => {
 
 watchDebounced(query, loadFiles, { debounce: 400 })
 watch([sortBy, orderBy], loadFiles)
+watch(trashMode, loadFiles)
 onMounted(loadFiles)
 </script>
 
@@ -135,7 +193,7 @@ onMounted(loadFiles)
       class="flex flex-col gap-4 min-h-full relative container"
     >
       <div
-        v-if="isOverDropZone"
+        v-if="isOverDropZone && !trashMode"
         class="absolute inset-0 z-50 bg-background/80 border-2 border-dashed border-primary rounded-lg flex items-center justify-center"
       >
         <p class="text-primary text-lg font-medium">
@@ -143,15 +201,45 @@ onMounted(loadFiles)
         </p>
       </div>
 
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex gap-1">
+          <Button
+            :variant="trashMode ? 'outline' : 'secondary'"
+            size="sm"
+            @click="trashMode = false"
+          >
+            <Files class="w-3.5 h-3.5 mr-1.5 pointer-events-none" />
+            {{ t("nav.files") }}
+          </Button>
+          <Button
+            :variant="trashMode ? 'secondary' : 'outline'"
+            size="sm"
+            @click="trashMode = true"
+          >
+            <Trash2 class="w-3.5 h-3.5 mr-1.5 pointer-events-none" />
+            {{ t("files.trash.toggle") }}
+          </Button>
+        </div>
+        <Button
+          v-if="trashMode && entities.length > 0 && !loading"
+          variant="destructive"
+          size="sm"
+          @click="emptyTrashDialogOpen = true"
+        >
+          {{ t("files.trash.emptyAction") }}
+        </Button>
+      </div>
+
       <FilesToolbar
         v-model:query="query"
         v-model:order-by="orderBy"
         v-model:sort-by="sortBy"
         v-model:loading="loading"
+        :trash="trashMode"
         @upload-click="openFilePicker"
       />
 
-      <div v-if="uploadQueue.length > 0" class="flex flex-col gap-2">
+      <div v-if="uploadQueue.length > 0 && !trashMode" class="flex flex-col gap-2">
         <div
           v-for="item in uploadQueue"
           :key="item.id"
@@ -201,8 +289,8 @@ onMounted(loadFiles)
           class="flex flex-col items-center justify-center gap-4 py-24 text-muted-foreground"
         >
           <Files class="w-12 h-12" />
-          <p>{{ t("files.empty") }}</p>
-          <Button @click="openFilePicker">
+          <p>{{ trashMode ? t("files.trash.empty") : t("files.empty") }}</p>
+          <Button v-if="!trashMode" @click="openFilePicker">
             {{ t("files.upload.first") }}
           </Button>
         </div>
@@ -215,8 +303,10 @@ onMounted(loadFiles)
             v-for="file in entities"
             :key="file.id"
             :file="file"
+            :trash="trashMode"
             @download="handleDownload"
             @delete="handleDelete"
+            @restore="handleRestore"
           />
         </div>
 
@@ -227,4 +317,24 @@ onMounted(loadFiles)
       </div>
     </div>
   </AppLayout>
+
+  <AlertDialog v-model:open="emptyTrashDialogOpen">
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>{{ t("files.trash.emptyConfirm.title") }}</AlertDialogTitle>
+        <AlertDialogDescription>
+          {{ t("files.trash.emptyConfirm.description") }}
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>{{ t("common.cancel") }}</AlertDialogCancel>
+        <AlertDialogAction
+          @click="handleEmptyTrash"
+          class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        >
+          {{ t("files.trash.emptyConfirm.action") }}
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
 </template>

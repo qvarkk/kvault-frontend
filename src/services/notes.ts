@@ -43,4 +43,20 @@ export const notesService = {
   autotag(id: string, number: number) {
     return http.post<Tag[]>(`/items/${id}/autotag`, { number })
   },
+
+  listDeleted(params?: Record<string, unknown>) {
+    return http.get<Paginated<Note>>("/items/deleted", { params })
+  },
+
+  restore(id: string) {
+    return http.post(`/items/${id}/restore`)
+  },
+
+  permanentDelete(id: string) {
+    return http.delete(`/items/deleted/${id}`)
+  },
+
+  emptyTrash() {
+    return http.delete("/items/deleted")
+  },
 }

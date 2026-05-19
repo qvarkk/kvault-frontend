@@ -30,4 +30,16 @@ export const filesService = {
   restore(id: string) {
     return http.post(`/files/${id}/restore`)
   },
+
+  listDeleted(params?: Record<string, unknown>) {
+    return http.get<Paginated<File>>("/files/deleted", { params })
+  },
+
+  permanentDelete(id: string) {
+    return http.delete(`/files/deleted/${id}`)
+  },
+
+  emptyTrash() {
+    return http.delete("/files/deleted")
+  },
 }

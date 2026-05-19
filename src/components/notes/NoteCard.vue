@@ -17,11 +17,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog"
 import { Button } from "../ui/button"
-import { ArrowRight, Ellipsis, ExternalLink, Trash2 } from "lucide-vue-next"
+import { ArrowRight, Ellipsis, ExternalLink, RotateCcw, Trash2 } from "lucide-vue-next"
 import { useI18n } from "vue-i18n"
 import { ref } from "vue"
 import DeleteNoteAlertModal from "./DeleteNoteAlertModal.vue"
+import { notesService } from "@/services/notes"
+import { toast } from "vue-sonner"
+import type { ApiError } from "@/types"
 
 const { t } = useI18n()
 const router = useRouter()
@@ -29,17 +42,16 @@ const router = useRouter()
 const props = defineProps<{
   note: Note
   includeMenu: boolean
+  trash?: boolean
 }>()
 
 const emit = defineEmits<{
   deleted: [id: string]
+  restored: [id: string]
 }>()
 
 const deleteDialogOpen = ref(false)
-
-function openDelete() {
-  deleteDialogOpen.value = true
-}
+const permanentDeleteDialogOpen = ref(false)
 
 function handleDeleted(id: string) {
   emit("deleted", id)
@@ -52,14 +64,46 @@ function openInNewTab() {
 function redirectToNote() {
   router.push({ name: "note", params: { id: props.note.id } })
 }
+
+async function handleRestore() {
+  try {
+    await notesService.restore(props.note.id)
+    emit("restored", props.note.id)
+    toast.success(t("notes.trash.restored"))
+  } catch (e) {
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
+  }
+}
+
+async function handlePermanentDelete() {
+  try {
+    await notesService.permanentDelete(props.note.id)
+    emit("deleted", props.note.id)
+    toast.success(t("notes.trash.deletedPermanently"))
+    permanentDeleteDialogOpen.value = false
+  } catch (e) {
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
+  }
+}
 </script>
 
 <template>
   <Card
-    class="group flex flex-col gap-3 p-4 h-full cursor-pointer hover:shadow-md transition-shadow dark:hover:bg-accent dark:transition-colors"
-    @click.prevent="redirectToNote"
-    @mousedown.middle.prevent="openInNewTab"
-    @auxclick.middle="openInNewTab"
+    class="group flex flex-col gap-3 p-4 h-full hover:shadow-md transition-shadow dark:hover:bg-accent dark:transition-colors"
+    :class="trash ? 'cursor-default' : 'cursor-pointer'"
+    @click.prevent="!trash && redirectToNote()"
+    @mousedown.middle.prevent="!trash && openInNewTab()"
+    @auxclick.middle="!trash && openInNewTab()"
   >
     <CardHeader
       class="p-0 flex flex-row items-start justify-between pointer-events-none"
@@ -76,19 +120,35 @@ function redirectToNote() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent @click.stop>
-          <DropdownMenuItem @click="openInNewTab">
-            <ExternalLink class="w-4 h-4 mr-2 pointer-events-none" />
-            {{ t("common.openInNewTab") }}
-          </DropdownMenuItem>
-          <DropdownMenuItem @click="redirectToNote">
-            <ArrowRight class="w-4 h-4 mr-2 pointer-events-none" />
-            {{ t("common.open") }}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem @click="openDelete" class="text-destructive">
-            <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
-            {{ t("common.delete") }}
-          </DropdownMenuItem>
+          <template v-if="trash">
+            <DropdownMenuItem @click="handleRestore">
+              <RotateCcw class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("notes.trash.restore") }}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              @click="permanentDeleteDialogOpen = true"
+              class="text-destructive"
+            >
+              <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("notes.trash.deletePermanently") }}
+            </DropdownMenuItem>
+          </template>
+          <template v-else>
+            <DropdownMenuItem @click="openInNewTab">
+              <ExternalLink class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("common.openInNewTab") }}
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="redirectToNote">
+              <ArrowRight class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("common.open") }}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem @click="deleteDialogOpen = true" class="text-destructive">
+              <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("common.delete") }}
+            </DropdownMenuItem>
+          </template>
         </DropdownMenuContent>
       </DropdownMenu>
     </CardHeader>
@@ -121,8 +181,29 @@ function redirectToNote() {
   </Card>
 
   <DeleteNoteAlertModal
+    v-if="!trash"
     v-model:open="deleteDialogOpen"
     :note-id="note.id"
     @deleted="handleDeleted"
   />
+
+  <AlertDialog v-if="trash" v-model:open="permanentDeleteDialogOpen">
+    <AlertDialogContent @click.stop>
+      <AlertDialogHeader>
+        <AlertDialogTitle>{{ t("notes.trash.deleteConfirm.title") }}</AlertDialogTitle>
+        <AlertDialogDescription>
+          {{ t("notes.trash.deleteConfirm.description") }}
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>{{ t("common.cancel") }}</AlertDialogCancel>
+        <AlertDialogAction
+          @click="handlePermanentDelete"
+          class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        >
+          {{ t("notes.trash.deleteConfirm.action") }}
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
 </template>

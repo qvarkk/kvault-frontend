@@ -100,6 +100,26 @@ export default {
       exportPdfErrorDescription:
         "Неизвестная ошибка произошла при экспорте PDF",
     },
+    trash: {
+      toggle: "Корзина",
+      empty: "Корзина пуста",
+      emptyAction: "Очистить корзину",
+      restore: "Восстановить",
+      deletePermanently: "Удалить навсегда",
+      deleteConfirm: {
+        title: "Удалить навсегда?",
+        description: "Это действие необратимо.",
+        action: "Удалить навсегда",
+      },
+      emptyConfirm: {
+        title: "Очистить корзину?",
+        description: "Все элементы будут удалены навсегда. Это действие необратимо.",
+        action: "Очистить корзину",
+      },
+      restored: "Заметка восстановлена",
+      deletedPermanently: "Заметка удалена навсегда",
+      emptied: "Корзина очищена",
+    },
   },
   shortcuts: {
     title: "горячие клавиши",
@@ -150,6 +170,26 @@ export default {
       createdAt: "Дата загрузки",
       name: "Название",
       size: "Размер",
+    },
+    trash: {
+      toggle: "Корзина",
+      empty: "Корзина пуста",
+      emptyAction: "Очистить корзину",
+      restore: "Восстановить",
+      deletePermanently: "Удалить навсегда",
+      deleteConfirm: {
+        title: "Удалить навсегда?",
+        description: "Это действие необратимо.",
+        action: "Удалить навсегда",
+      },
+      emptyConfirm: {
+        title: "Очистить корзину?",
+        description: "Все файлы будут удалены навсегда. Это действие необратимо.",
+        action: "Очистить корзину",
+      },
+      restored: "Файл восстановлен",
+      deletedPermanently: "Файл удалён навсегда",
+      emptied: "Корзина очищена",
     },
   },
   settings: {

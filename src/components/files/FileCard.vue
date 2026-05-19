@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
-import { FileText, Download, Trash2, Ellipsis } from "lucide-vue-next"
+import { FileText, Download, Trash2, Ellipsis, RotateCcw } from "lucide-vue-next"
 import {
   Card,
   CardHeader,
@@ -35,11 +35,13 @@ const { t } = useI18n()
 
 const props = defineProps<{
   file: File
+  trash?: boolean
 }>()
 
 const emit = defineEmits<{
   download: [id: string]
   delete: [id: string]
+  restore: [id: string]
 }>()
 
 const deleteOpen = ref(false)
@@ -77,18 +79,31 @@ const statusVariant: Record<
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent @click.stop>
-          <DropdownMenuItem
-            @click="emit('download', file.id)"
-            :disabled="file.status !== 'ready'"
-          >
-            <Download class="w-4 h-4 mr-2 pointer-events-none" />
-            {{ t("files.download") }}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem @click="deleteOpen = true" class="text-destructive">
-            <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
-            {{ t("common.delete") }}
-          </DropdownMenuItem>
+          <template v-if="trash">
+            <DropdownMenuItem @click="emit('restore', file.id)">
+              <RotateCcw class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("files.trash.restore") }}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem @click="deleteOpen = true" class="text-destructive">
+              <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("files.trash.deletePermanently") }}
+            </DropdownMenuItem>
+          </template>
+          <template v-else>
+            <DropdownMenuItem
+              @click="emit('download', file.id)"
+              :disabled="file.status !== 'ready'"
+            >
+              <Download class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("files.download") }}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem @click="deleteOpen = true" class="text-destructive">
+              <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("common.delete") }}
+            </DropdownMenuItem>
+          </template>
         </DropdownMenuContent>
       </DropdownMenu>
     </CardHeader>
@@ -109,6 +124,7 @@ const statusVariant: Record<
         timeAgo(file.createdAt)
       }}</span>
       <Button
+        v-if="!trash"
         variant="outline"
         size="sm"
         :disabled="file.status !== 'ready'"
@@ -123,9 +139,11 @@ const statusVariant: Record<
   <AlertDialog v-model:open="deleteOpen">
     <AlertDialogContent>
       <AlertDialogHeader>
-        <AlertDialogTitle>{{ t("files.delete.title") }}</AlertDialogTitle>
+        <AlertDialogTitle>
+          {{ trash ? t("files.trash.deleteConfirm.title") : t("files.delete.title") }}
+        </AlertDialogTitle>
         <AlertDialogDescription>
-          {{ t("files.delete.description") }}
+          {{ trash ? t("files.trash.deleteConfirm.description") : t("files.delete.description") }}
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
@@ -134,7 +152,7 @@ const statusVariant: Record<
           @click="emit('delete', file.id)"
           class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
         >
-          {{ t("common.delete") }}
+          {{ trash ? t("files.trash.deleteConfirm.action") : t("common.delete") }}
         </AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>

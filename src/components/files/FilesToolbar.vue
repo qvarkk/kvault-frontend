@@ -20,6 +20,10 @@ const sortBy = defineModel<string>("sortBy", { default: "" })
 const orderBy = defineModel<string>("orderBy", { default: "" })
 const loading = defineModel<boolean>("loading", { default: false })
 
+defineProps<{
+  trash?: boolean
+}>()
+
 const emits = defineEmits<{
   uploadClick: []
 }>()
@@ -65,7 +69,7 @@ function toggleOrder() {
           </SelectContent>
         </Select>
       </ButtonGroup>
-      <Button @click="emits('uploadClick')">
+      <Button v-if="!trash" @click="emits('uploadClick')">
         <Upload class="w-4 h-4 mr-2 pointer-events-none" />
         {{ t("common.upload") }}
       </Button>

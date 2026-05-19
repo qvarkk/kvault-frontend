@@ -99,6 +99,26 @@ export default {
       exportPdfErrorDescription:
         "PDFのエクスポート中に不明なエラーが発生しました",
     },
+    trash: {
+      toggle: "ゴミ箱",
+      empty: "ゴミ箱は空です",
+      emptyAction: "ゴミ箱を空にする",
+      restore: "復元",
+      deletePermanently: "完全に削除",
+      deleteConfirm: {
+        title: "完全に削除しますか？",
+        description: "この操作は取り消せません。",
+        action: "完全に削除",
+      },
+      emptyConfirm: {
+        title: "ゴミ箱を空にしますか？",
+        description: "すべての項目が完全に削除されます。この操作は取り消せません。",
+        action: "ゴミ箱を空にする",
+      },
+      restored: "ノートを復元しました",
+      deletedPermanently: "ノートを完全に削除しました",
+      emptied: "ゴミ箱を空にしました",
+    },
   },
   shortcuts: {
     title: "キーボードショートカット",
@@ -149,6 +169,26 @@ export default {
       createdAt: "アップロード日時",
       name: "名前",
       size: "サイズ",
+    },
+    trash: {
+      toggle: "ゴミ箱",
+      empty: "ゴミ箱は空です",
+      emptyAction: "ゴミ箱を空にする",
+      restore: "復元",
+      deletePermanently: "完全に削除",
+      deleteConfirm: {
+        title: "完全に削除しますか？",
+        description: "この操作は取り消せません。",
+        action: "完全に削除",
+      },
+      emptyConfirm: {
+        title: "ゴミ箱を空にしますか？",
+        description: "すべてのファイルが完全に削除されます。この操作は取り消せません。",
+        action: "ゴミ箱を空にする",
+      },
+      restored: "ファイルを復元しました",
+      deletedPermanently: "ファイルを完全に削除しました",
+      emptied: "ゴミ箱を空にしました",
     },
   },
   settings: {
