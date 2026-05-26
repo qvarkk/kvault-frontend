@@ -1,42 +1,25 @@
 # kvault-frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Фронтенд для [kvault](https://github.com/qvarkk/kvault) — самохостируемого приложения для заметок.
 
-## Recommended IDE Setup
+## Функциональность
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+| Функция             | Описание                                                          |
+| ------------------- | ----------------------------------------------------------------- |
+| Заметки             | Создание, редактирование и удаление заметок с поддержкой Markdown |
+| Теги                | Ручная привязка тегов к заметкам                                  |
+| Автотегирование     | Умная генерация тегов на основе содержимого заметки               |
+| Файлы               | Загрузка PDF-файлов с отображением прогресса и отменой загрузки   |
+| Онлайн-просмотр PDF | Открытие PDF прямо в браузере без скачивания                      |
+| Drag & Drop         | Перетаскивание файлов для загрузки                                |
+| Корзина             | Удаление заметок и файлов с возможностью восстановления           |
+| Адаптивность        | Корректное отображение на мобильных устройствах                   |
+| Тема                | Светлая и тёмная тема оформления                                  |
+| Локализация         | Интерфейс на русском, английском и японском языках                |
 
-## Recommended Browser Setup
+## Инструкции по установке и запуску
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Инструкции по развёртыванию находятся в README бэкенд-репозитория:
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
+- **GitHub:** [github.com/qvarkk/kvault](https://github.com/qvarkk/kvault#readme)
+- **Gitverse:** [gitverse.ru/qvarkk/kvault](https://gitverse.ru/qvarkk/kvault#readme)
