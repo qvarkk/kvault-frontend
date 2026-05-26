@@ -89,6 +89,7 @@ export default {
       filter: "Tags",
       search: "Search tags...",
       none: "No tags found",
+      typeToAdd: "Type to add tags",
       clear: "Clear all",
       generate: "Generate",
     },

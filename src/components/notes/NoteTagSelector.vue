@@ -122,7 +122,7 @@ onMounted(fetch)
         >
           {{ tag.name }}
         </button>
-        <p v-if="unbound.length === 0">
+        <div v-if="unbound.length === 0">
           <Button
             v-if="search.trim() && !exactMatch"
             @click="handleCreate"
@@ -131,7 +131,10 @@ onMounted(fetch)
             <Plus class="w-3 h-3 pointer-events-none" />
             {{ t("notes.tags.create", { name: search }) }}
           </Button>
-        </p>
+          <p v-else-if="!search.trim()" class="text-xs text-muted-foreground text-center py-2">
+            {{ t("notes.tags.typeToAdd") }}
+          </p>
+        </div>
 
         <div ref="sentinel" class="h-1" />
 

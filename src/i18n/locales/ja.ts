@@ -89,6 +89,7 @@ export default {
       filter: "タグ",
       search: "タグを検索...",
       none: "タグがみつかりません",
+      typeToAdd: "入力してタグを追加",
       clear: "クリア",
       generate: "生成",
     },

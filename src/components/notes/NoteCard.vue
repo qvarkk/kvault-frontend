@@ -154,7 +154,7 @@ async function handlePermanentDelete() {
     </CardHeader>
 
     <CardContent
-      class="p-0 text-sm text-muted-foreground flex-1 pointer-events-none"
+      class="p-0 text-sm text-muted-foreground flex-1 pointer-events-none break-words"
     >
       {{
         note.content.slice(0, 100) + (note.content.length > 100 ? "..." : "")

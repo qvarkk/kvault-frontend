@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from "vue"
+import { ref, computed, onMounted, onUnmounted, watch, reactive } from "vue"
 import { useI18n } from "vue-i18n"
 import {
   watchDebounced,
@@ -86,12 +86,12 @@ function cancelUpload(itemId: string) {
 }
 
 async function uploadFile(file: globalThis.File) {
-  const item: UploadItem = {
+  const item = reactive<UploadItem>({
     id: crypto.randomUUID(),
     name: file.name,
     progress: 0,
     status: "uploading",
-  }
+  })
   uploadQueue.value.push(item)
 
   const controller = new AbortController()
