@@ -17,6 +17,10 @@ export const notesService = {
     return http.post<Note>("/items", { title, type: "text" })
   },
 
+  createUrl(title: string, sourceUrl: string) {
+    return http.post<Note>("/items", { title, type: "url", source_url: sourceUrl })
+  },
+
   remove(id: string) {
     return http.delete(`/items/${id}`)
   },
@@ -59,5 +63,13 @@ export const notesService = {
 
   emptyTrash() {
     return http.delete("/items/deleted")
+  },
+
+  updateSourceUrl(id: string, sourceUrl: string) {
+    return http.patch<Note>(`/items/${id}`, { source_url: sourceUrl })
+  },
+
+  refetch(id: string) {
+    return http.post(`/items/${id}/refetch`)
   },
 }

@@ -64,10 +64,12 @@ const {
 
 const title = ref("")
 const content = ref("")
+const sourceUrl = ref("")
 const changed = ref(false)
 const deleteDialogOpen = ref(false)
 const autotagCount = ref(5)
 const autotagLoading = ref(false)
+const refetchLoading = ref(false)
 
 async function handleTitleChange() {
   if (!note.value) return
@@ -141,6 +143,38 @@ async function handleAutotag() {
   }
 }
 
+const debouncedUrlSave = useDebounceFn(async () => {
+  if (!note.value) return
+  try {
+    await notesService.updateSourceUrl(note.value.id, sourceUrl.value.trim())
+  } catch (e) {
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
+  }
+}, 1500)
+
+async function handleRefetch() {
+  if (!note.value) return
+  refetchLoading.value = true
+  try {
+    await notesService.refetch(note.value.id)
+    toast.success(t("notes.url.refetchStarted"))
+  } catch (e) {
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
+  } finally {
+    refetchLoading.value = false
+  }
+}
+
 function handleNoteDeleted() {
   router.push({ name: "notes" })
 }
@@ -154,6 +188,7 @@ onMounted(async () => {
   if (note.value) {
     title.value = note.value.title ?? ""
     content.value = note.value.content ?? ""
+    sourceUrl.value = note.value.sourceUrl ?? ""
   }
 })
 
@@ -288,6 +323,40 @@ useHead({ title: computed(() => note.value?.title ?? t("head.note")) })
           @blur="handleTitleChange"
           class="text-2xl font-bold focus-visible:ring-0"
         />
+      </div>
+
+      <div v-if="note.type === 'url'" class="flex items-center gap-2 pt-2">
+        <Input
+          v-model="sourceUrl"
+          :placeholder="t('notes.url.source')"
+          class="flex-1"
+          @input="debouncedUrlSave"
+        />
+        <Button
+          variant="ghost"
+          size="icon"
+          @click="handleRefetch"
+          :disabled="refetchLoading"
+        >
+          <Loader2
+            v-if="refetchLoading"
+            class="w-4 h-4 animate-spin pointer-events-none"
+          />
+          <RefreshCw v-else class="w-4 h-4 pointer-events-none" />
+        </Button>
+      </div>
+
+      <div
+        v-if="note.type === 'url' && note.urlMetadata"
+        class="flex flex-col gap-0.5 pt-2 text-sm text-muted-foreground"
+      >
+        <span v-if="note.urlMetadata.siteName" class="font-medium text-foreground">
+          {{ note.urlMetadata.siteName }}
+        </span>
+        <span v-if="note.urlMetadata.title">{{ note.urlMetadata.title }}</span>
+        <span v-if="note.urlMetadata.description" class="text-xs">
+          {{ note.urlMetadata.description }}
+        </span>
       </div>
 
       <div class="flex items-center gap-2 py-2 flex-wrap">

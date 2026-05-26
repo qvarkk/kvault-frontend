@@ -64,8 +64,13 @@ export default {
     create: {
       title: "New note",
       placeholder: "Note title...",
+      urlPlaceholder: "Source URL...",
       created: "Note created",
       first: "Create your first note",
+      tabs: {
+        text: "Text",
+        url: "URL",
+      },
     },
     update: {
       saved: "Note saved",
@@ -99,6 +104,13 @@ export default {
       exportPdfSuccess: "PDF exported sucessfully",
       exportPdfErrorTitle: "Unexpected error",
       exportPdfErrorDescription: "Unknown error occured while exporting PDF",
+    },
+    url: {
+      openUrl: "Open URL",
+      refetch: "Refetch",
+      refetchStarted: "Started refetching process in the background",
+      source: "URL",
+      description: "Description",
     },
     trash: {
       toggle: "Trash",

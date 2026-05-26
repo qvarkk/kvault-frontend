@@ -25,6 +25,7 @@ const content = defineModel<string>("content")
 
 const { t } = useI18n()
 const isMobile = useMediaQuery("(max-width: 768px)")
+const isDesktop = useMediaQuery("(min-width: 1280px)")
 
 const mobileToolbars: ToolbarNames[] = [
   "bold",
@@ -41,9 +42,28 @@ const mobileToolbars: ToolbarNames[] = [
   1,
 ]
 
-const desktopToolbars: ToolbarNames[] = [
-  2,
+const mediumToolbars: ToolbarNames[] = [
+  "bold",
+  "italic",
   "-",
+  "title",
+  "unorderedList",
+  "orderedList",
+  "task",
+  "-",
+  "code",
+  "-",
+  "revoke",
+  "next",
+  "=",
+  "pageFullscreen",
+  "preview",
+  "-",
+  0,
+  1,
+]
+
+const desktopToolbars: ToolbarNames[] = [
   "bold",
   "underline",
   "italic",
@@ -76,9 +96,11 @@ const desktopToolbars: ToolbarNames[] = [
   1,
 ]
 
-const toolbars = computed(() =>
-  isMobile.value ? mobileToolbars : desktopToolbars,
-)
+const toolbars = computed(() => {
+  if (isMobile.value) return mobileToolbars
+  if (isDesktop.value) return desktopToolbars
+  return mediumToolbars
+})
 
 const getEditorLanguage = computed(() => {
   const currentLocale = i18n.global.locale.value

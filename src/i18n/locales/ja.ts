@@ -64,8 +64,13 @@ export default {
     create: {
       title: "新規ノート",
       placeholder: "ノートのタイトル...",
+      urlPlaceholder: "ソースURL...",
       created: "ノートを作成しました",
       first: "最初のノートを作成しましょう",
+      tabs: {
+        text: "テキスト",
+        url: "URL",
+      },
     },
     update: {
       saved: "保存しました",
@@ -100,6 +105,13 @@ export default {
       exportPdfErrorTitle: "予期しないエラー",
       exportPdfErrorDescription:
         "PDFのエクスポート中に不明なエラーが発生しました",
+    },
+    url: {
+      openUrl: "URLを開く",
+      refetch: "再取得",
+      refetchStarted: "バックグラウンドで再取得を開始しました",
+      source: "URL",
+      description: "説明",
     },
     trash: {
       toggle: "ゴミ箱",

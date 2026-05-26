@@ -65,8 +65,13 @@ export default {
     create: {
       title: "Новая заметка",
       placeholder: "Заголовок заметки...",
+      urlPlaceholder: "Ссылка на источник...",
       created: "Заметка создана",
       first: "Создайте свою первую заметку",
+      tabs: {
+        text: "Текст",
+        url: "URL",
+      },
     },
     update: {
       saved: "Заметка сохранена",
@@ -101,6 +106,13 @@ export default {
       exportPdfErrorTitle: "Внутренняя ошибка",
       exportPdfErrorDescription:
         "Неизвестная ошибка произошла при экспорте PDF",
+    },
+    url: {
+      openUrl: "Открыть URL",
+      refetch: "Обновить",
+      refetchStarted: "Процесс обновления запущен в фоне",
+      source: "URL",
+      description: "Описание",
     },
     trash: {
       toggle: "Корзина",

@@ -28,7 +28,7 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog"
 import { Button } from "../ui/button"
-import { ArrowRight, Ellipsis, ExternalLink, RotateCcw, Trash2 } from "lucide-vue-next"
+import { ArrowRight, Ellipsis, ExternalLink, Link2, RefreshCw, RotateCcw, Trash2 } from "lucide-vue-next"
 import { useI18n } from "vue-i18n"
 import { ref } from "vue"
 import DeleteNoteAlertModal from "./DeleteNoteAlertModal.vue"
@@ -65,6 +65,24 @@ function redirectToNote() {
   router.push({ name: "note", params: { id: props.note.id } })
 }
 
+function openSourceUrl() {
+  if (props.note.sourceUrl) window.open(props.note.sourceUrl, "_blank")
+}
+
+async function handleRefetch() {
+  try {
+    await notesService.refetch(props.note.id)
+    toast.success(t("notes.url.refetchStarted"))
+  } catch (e) {
+    if (e && typeof e === "object" && "detail" in e)
+      toast.error((e as ApiError).detail)
+    else
+      toast.error(t("errors.internal.title"), {
+        description: t("errors.internal.detail"),
+      })
+  }
+}
+
 async function handleRestore() {
   try {
     await notesService.restore(props.note.id)
@@ -99,12 +117,18 @@ async function handlePermanentDelete() {
 
 <template>
   <Card
-    class="group flex flex-col gap-3 p-4 h-full hover:shadow-md transition-shadow dark:hover:bg-accent dark:transition-colors"
+    class="group flex flex-col gap-3 p-4 h-full hover:shadow-md transition-shadow dark:hover:bg-accent dark:transition-colors relative overflow-hidden"
     :class="trash ? 'cursor-default' : 'cursor-pointer'"
     @click.prevent="!trash && redirectToNote()"
     @mousedown.middle.prevent="!trash && openInNewTab()"
     @auxclick.middle="!trash && openInNewTab()"
   >
+    <div
+      v-if="note.type === 'url' && note.urlMetadata?.image"
+      class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
+      :style="{ backgroundImage: `url(${note.urlMetadata.image})` }"
+    />
+
     <CardHeader
       class="p-0 flex flex-row items-start justify-between pointer-events-none"
     >
@@ -143,6 +167,17 @@ async function handlePermanentDelete() {
               <ArrowRight class="w-4 h-4 mr-2 pointer-events-none" />
               {{ t("common.open") }}
             </DropdownMenuItem>
+            <template v-if="note.type === 'url'">
+              <DropdownMenuSeparator />
+              <DropdownMenuItem v-if="note.sourceUrl" @click="openSourceUrl">
+                <Link2 class="w-4 h-4 mr-2 pointer-events-none" />
+                {{ t("notes.url.openUrl") }}
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="handleRefetch">
+                <RefreshCw class="w-4 h-4 mr-2 pointer-events-none" />
+                {{ t("notes.url.refetch") }}
+              </DropdownMenuItem>
+            </template>
             <DropdownMenuSeparator />
             <DropdownMenuItem @click="deleteDialogOpen = true" class="text-destructive">
               <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
@@ -156,9 +191,16 @@ async function handlePermanentDelete() {
     <CardContent
       class="p-0 text-sm text-muted-foreground flex-1 pointer-events-none break-words"
     >
-      {{
-        note.content.slice(0, 100) + (note.content.length > 100 ? "..." : "")
-      }}
+      <template v-if="note.type === 'url'">
+        <p v-if="note.urlMetadata?.siteName" class="font-medium text-foreground">
+          {{ note.urlMetadata.siteName }}
+        </p>
+        <p v-if="note.sourceUrl">{{ t("notes.url.source") }}: {{ note.sourceUrl }}</p>
+        <p v-if="note.urlMetadata?.description">{{ t("notes.url.description") }}: {{ note.urlMetadata.description.slice(0, 100) + (note.urlMetadata.description.length > 100 ? "..." : "") }}</p>
+      </template>
+      <template v-else>
+        {{ note.content.slice(0, 100) + (note.content.length > 100 ? "..." : "") }}
+      </template>
     </CardContent>
 
     <CardFooter
