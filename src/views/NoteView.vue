@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Check,
+  Link2,
   Loader2,
   RefreshCw,
   Sparkles,
@@ -175,6 +176,10 @@ async function handleRefetch() {
   }
 }
 
+function openSourceUrl() {
+  if (sourceUrl.value) window.open(sourceUrl.value, "_blank")
+}
+
 function handleNoteDeleted() {
   router.push({ name: "notes" })
 }
@@ -332,6 +337,14 @@ useHead({ title: computed(() => note.value?.title ?? t("head.note")) })
           class="flex-1"
           @input="debouncedUrlSave"
         />
+        <Button
+          v-if="sourceUrl"
+          variant="ghost"
+          size="icon"
+          @click="openSourceUrl"
+        >
+          <Link2 class="w-4 h-4 pointer-events-none" />
+        </Button>
         <Button
           variant="ghost"
           size="icon"

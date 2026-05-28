@@ -11,11 +11,15 @@ export default {
       message: "データはあなたのもの。すぐに始められます。",
     },
     success: "ログインしました",
-    email: "メールアドレス",
+    username: "ユーザー名",
+    usernamePlaceholder: "ユーザー名",
     password: "パスワード",
   },
   validation: {
-    email: "メールアドレスを確認してください",
+    username: {
+      min: "ユーザー名は{min}文字以上である必要があります",
+      max: "ユーザー名は{max}文字以下である必要があります",
+    },
     password: {
       min: "パスワードは{min}文字以上で入力してください",
     },
@@ -215,7 +219,7 @@ export default {
     },
     account: {
       description: "アカウント設定",
-      email: "メールアドレス",
+      username: "ユーザー名",
       editor: {
         title: "エディタ設定",
         hideShortcuts: "ショートカットメニューを非表示にする",

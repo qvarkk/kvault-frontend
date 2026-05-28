@@ -110,8 +110,8 @@ function openDeleteModal() {
 
     <div class="flex items-center justify-between gap-4">
       <div class="flex flex-col gap-1">
-        <p class="text-sm font-medium">{{ t("settings.account.email") }}</p>
-        <p class="text-xs text-muted-foreground">{{ auth.user?.email }}</p>
+        <p class="text-sm font-medium">{{ t("settings.account.username") }}</p>
+        <p class="text-xs text-muted-foreground">{{ auth.user?.username }}</p>
       </div>
 
       <!-- separator didn't work :( -->

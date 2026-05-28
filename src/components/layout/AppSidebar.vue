@@ -144,11 +144,11 @@ function openSettings() {
                   <AvatarFallback
                     class="bg-primary text-primary-foreground text-xs"
                   >
-                    {{ auth.user?.email?.slice(0, 2).toUpperCase() }}
+                    {{ auth.user?.username?.slice(0, 2).toUpperCase() }}
                   </AvatarFallback>
                 </Avatar>
                 <span v-if="isExpanded" class="truncate pointer-events-none">
-                  {{ auth.user?.email }}
+                  {{ auth.user?.username }}
                 </span>
                 <ChevronsUpDown
                   v-if="isExpanded"
@@ -158,7 +158,7 @@ function openSettings() {
             </DropdownMenuTrigger>
             <DropdownMenuContent :class="!isMobile ? 'ml-2' : ''" side="top">
               <DropdownMenuLabel class="flex flex-col">
-                <span class="truncate">{{ auth.user?.email }}</span>
+                <span class="truncate">{{ auth.user?.username }}</span>
                 <span class="text-xs text-muted-foreground truncate">
                   ID: {{ auth.user?.id }}
                 </span>

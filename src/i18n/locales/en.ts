@@ -11,11 +11,15 @@ export default {
       message: "Your notes, your data. Get started in seconds.",
     },
     success: "Successfully logged in",
-    email: "Email",
+    username: "Username",
+    usernamePlaceholder: "username",
     password: "Password",
   },
   validation: {
-    email: "Provide proper email",
+    username: {
+      min: "Username must be at least {min} characters",
+      max: "Username must be at most {max} characters",
+    },
     password: {
       min: "Password has to be minimum {min} characters",
     },
@@ -214,7 +218,7 @@ export default {
     },
     account: {
       description: "Account settings",
-      email: "Email",
+      username: "Username",
       editor: {
         title: "Editor settings",
         hideShortcuts: "Hide shortcuts menu",

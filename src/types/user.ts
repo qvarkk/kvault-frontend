@@ -1,13 +1,13 @@
 export interface User {
   id: string
-  email: string
+  username: string
   apiKey: string
   updatedAt: string
   createdAt: string
 }
 
 export interface LoginPayload {
-  email: string
+  username: string
   password: string
 }
 

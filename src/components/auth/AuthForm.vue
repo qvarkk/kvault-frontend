@@ -34,11 +34,17 @@ const props = defineProps<{
 }>()
 const baseI18n = `auth.${props.mode}`
 
+const usernameSchema =
+  props.mode === "login"
+    ? z.string().max(255, { message: t("validation.username.max", { max: 255 }) })
+    : z
+        .string()
+        .min(3, { message: t("validation.username.min", { min: 3 }) })
+        .max(255, { message: t("validation.username.max", { max: 255 }) })
+
 const formSchema = toTypedSchema(
   z.object({
-    email: z.string().email({
-      message: t("validation.email"),
-    }),
+    username: usernameSchema,
     password: z.string().min(8, {
       message: t("validation.password.min", { min: 8 }),
     }),
@@ -48,7 +54,7 @@ const formSchema = toTypedSchema(
 const { handleSubmit, resetForm } = useForm({
   validationSchema: formSchema,
   initialValues: {
-    email: "",
+    username: "",
     password: "",
   },
 })
@@ -95,13 +101,13 @@ function switchMode() {
         @submit.prevent="onSubmit"
         class="flex flex-col gap-4"
       >
-        <FormField v-slot="{ componentField }" name="email">
+        <FormField v-slot="{ componentField }" name="username">
           <FormItem>
-            <FormLabel>{{ t("auth.email") }}</FormLabel>
+            <FormLabel>{{ t("auth.username") }}</FormLabel>
             <FormControl>
               <Input
-                type="email"
-                placeholder="mail@example.com"
+                type="text"
+                :placeholder="t('auth.usernamePlaceholder')"
                 v-bind="componentField"
               />
             </FormControl>
