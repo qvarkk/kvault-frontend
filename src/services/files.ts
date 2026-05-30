@@ -14,6 +14,10 @@ export const filesService = {
     return http.get<PresignedUrl>(`/files/${id}/view`)
   },
 
+  getInfo(id: string) {
+    return http.get<File>(`/files/${id}/info`)
+  },
+
   upload(file: globalThis.File, onProgress?: (percent: number) => void, signal?: AbortSignal) {
     const formData = new FormData()
     formData.append("file", file)

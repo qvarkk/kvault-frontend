@@ -117,6 +117,34 @@ export default {
       refetchStarted: "Процесс обновления запущен в фоне",
       source: "URL",
       description: "Описание",
+      status: {
+        pending: "Загрузка содержимого…",
+        ready: "Содержимое загружено",
+        error: "Ошибка загрузки",
+      },
+    },
+    info: {
+      title: "Сведения о заметке",
+      type: "Тип",
+      types: {
+        text: "Текст",
+        url: "URL",
+      },
+      urlStatus: "Статус URL",
+      tags: "Теги",
+      created: "Создано",
+      updated: "Обновлено",
+      viewExtractedText: "Показать извлечённый текст",
+      sourceInfo: "Об источнике",
+      source: {
+        title: "Метаданные источника",
+        description: "Метаданные, извлечённые со страницы.",
+      },
+      extractedText: {
+        title: "Извлечённый текст",
+        description: "Текст, извлечённый из содержимого страницы.",
+        empty: "Текст не был извлечён.",
+      },
     },
     trash: {
       toggle: "Корзина",
@@ -185,6 +213,19 @@ export default {
       uploading: "Загружается",
       processing: "Обрабатывается",
       error: "Ошибка",
+      description: {
+        uploading: "Идёт загрузка",
+        processing: "Извлечение текста…",
+        ready: "Текст извлечён и доступен для поиска",
+        error: "Не удалось извлечь текст",
+      },
+    },
+    info: {
+      title: "Сведения о файле",
+      size: "Размер",
+      mimeType: "Тип",
+      uploaded: "Загружен",
+      updated: "Обновлён",
     },
     sort: {
       createdAt: "Дата загрузки",
@@ -233,6 +274,12 @@ export default {
         description: "Обновление API ключа деактивирует текущий ключ.",
         refresh: "Обновить",
         refreshed: "API ключ обновлен",
+        reveal: {
+          title: "Ваш новый API ключ",
+          description:
+            "Скопируйте его сейчас — в целях безопасности он хранится в виде хеша и больше не будет показан.",
+          close: "Готово",
+        },
       },
       password: {
         title: "Сменить пароль",
@@ -332,5 +379,7 @@ export default {
     delete: "Удалить",
     open: "Открыть",
     openInNewTab: "Открыть в новой вкладке",
+    additionalInfo: "Подробнее",
+    source: "Источник",
   },
 }

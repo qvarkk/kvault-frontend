@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { toast } from "vue-sonner"
+import { toastApiError } from "@/services/apiError"
 import { useForm } from "vee-validate"
 import { toTypedSchema } from "@vee-validate/zod"
 import { z } from "zod"
@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/card"
 import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores"
-import type { ApiError } from "@/types"
 
 const { t } = useI18n()
 const router = useRouter()
@@ -68,8 +67,7 @@ const onSubmit = handleSubmit(async (data) => {
     }
     router.push({ name: "home" })
   } catch (error) {
-    const apiError = error as ApiError
-    toast.error(apiError.detail)
+    toastApiError(error)
   }
 })
 

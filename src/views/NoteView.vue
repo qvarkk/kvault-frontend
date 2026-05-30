@@ -2,17 +2,21 @@
 import { ref, computed, onMounted, watch } from "vue"
 import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
-import { useDark, useDebounceFn, useMediaQuery } from "@vueuse/core"
+import { useDark, useDebounceFn } from "@vueuse/core"
 import { useNote } from "@/composables/useNote"
 import { toast } from "vue-sonner"
-import type { ApiError, Tag } from "@/types"
+import { toastApiError } from "@/services/apiError"
+import type { Tag } from "@/types"
 import AppLayout from "@/components/layout/AppLayout.vue"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Check,
+  Ellipsis,
+  Info,
   Link2,
+  Link as LinkIcon,
   Loader2,
   RefreshCw,
   Sparkles,
@@ -22,7 +26,16 @@ import {
   Wand2,
   X,
 } from "lucide-vue-next"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import DeleteNoteAlertModal from "@/components/notes/DeleteNoteAlertModal.vue"
+import NoteInfoModal from "@/components/notes/NoteInfoModal.vue"
+import NoteSourceModal from "@/components/notes/NoteSourceModal.vue"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import "md-editor-v3/lib/style.css"
@@ -68,6 +81,8 @@ const content = ref("")
 const sourceUrl = ref("")
 const changed = ref(false)
 const deleteDialogOpen = ref(false)
+const infoOpen = ref(false)
+const sourceOpen = ref(false)
 const autotagCount = ref(5)
 const autotagLoading = ref(false)
 const refetchLoading = ref(false)
@@ -80,12 +95,7 @@ async function handleTitleChange() {
     await updateNote(note.value.id, { title: cleanTitle })
     toast.success(t("notes.update.titleChanged"))
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
     title.value = note.value.title
   }
 }
@@ -95,12 +105,7 @@ async function handleBindTag(tag: Tag) {
   try {
     await bindTag(note.value.id, tag)
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 
@@ -109,12 +114,7 @@ async function handleUnbindTag(tagId: string) {
   try {
     await unbindTag(note.value.id, tagId)
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 
@@ -133,12 +133,7 @@ async function handleAutotag() {
       }
     }
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   } finally {
     autotagLoading.value = false
   }
@@ -149,12 +144,7 @@ const debouncedUrlSave = useDebounceFn(async () => {
   try {
     await notesService.updateSourceUrl(note.value.id, sourceUrl.value.trim())
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }, 1500)
 
@@ -165,12 +155,7 @@ async function handleRefetch() {
     await notesService.refetch(note.value.id)
     toast.success(t("notes.url.refetchStarted"))
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   } finally {
     refetchLoading.value = false
   }
@@ -202,12 +187,7 @@ const debouncedSave = useDebounceFn(async () => {
   try {
     await updateNote(note.value.id, { content: content.value })
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   } finally {
     changed.value = false
   }
@@ -316,9 +296,31 @@ useHead({ title: computed(() => note.value?.title ?? t("head.note")) })
               </Button>
             </PopoverContent>
           </Popover>
-          <Button variant="ghost" size="icon" @click="openDelete">
-            <Trash2 class="w-4 h-4 pointer-events-none" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="ghost" size="icon">
+                <Ellipsis class="w-4 h-4 pointer-events-none" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem @click="infoOpen = true">
+                <Info class="w-4 h-4 mr-2 pointer-events-none" />
+                {{ t("common.additionalInfo") }}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                v-if="note.type === 'url'"
+                @click="sourceOpen = true"
+              >
+                <LinkIcon class="w-4 h-4 mr-2 pointer-events-none" />
+                {{ t("notes.info.sourceInfo") }}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem class="text-destructive" @click="openDelete">
+                <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
+                {{ t("common.delete") }}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -415,5 +417,7 @@ useHead({ title: computed(() => note.value?.title ?? t("head.note")) })
       :note-id="id"
       @deleted="handleNoteDeleted"
     />
+    <NoteInfoModal v-if="note" v-model:open="infoOpen" :note="note" />
+    <NoteSourceModal v-if="note" v-model:open="sourceOpen" :note="note" />
   </AppLayout>
 </template>

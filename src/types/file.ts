@@ -9,6 +9,7 @@ export interface File {
   mimeType: string
   status: FileStatus
   createdAt: string
+  updatedAt: string
 }
 
 export interface PresignedUrl {

@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n"
 import { watchDebounced } from "@vueuse/core"
 import { stopwordsService } from "@/services/stopwords"
 import { toast } from "vue-sonner"
+import { toastApiError } from "@/services/apiError"
 import type { Stopword, ApiError } from "@/types"
 import {
   Loader2,
@@ -71,7 +72,7 @@ async function handleToggle(word: Stopword) {
     }
     await fetchStopwords()
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    toastApiError(e)
   }
 }
 
@@ -80,7 +81,7 @@ async function handleDelete(word: string) {
     await stopwordsService.remove(word)
     await fetchStopwords()
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    toastApiError(e)
   }
 }
 
@@ -92,7 +93,7 @@ async function handleAdd() {
     newWord.value = ""
     await fetchStopwords()
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    toastApiError(e)
   } finally {
     addLoading.value = false
   }

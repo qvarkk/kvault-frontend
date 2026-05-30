@@ -25,6 +25,7 @@ import { NotebookPen, Plus, RefreshCw, Trash2 } from "lucide-vue-next"
 import { computed, onMounted, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { toast } from "vue-sonner"
+import { toastApiError } from "@/services/apiError"
 
 const PAGE_SIZE = 20
 
@@ -82,12 +83,7 @@ async function handleEmptyTrash() {
     emptyTrashDialogOpen.value = false
     await loadNotes()
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 

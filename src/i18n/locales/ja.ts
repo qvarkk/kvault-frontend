@@ -116,6 +116,34 @@ export default {
       refetchStarted: "バックグラウンドで再取得を開始しました",
       source: "URL",
       description: "説明",
+      status: {
+        pending: "コンテンツを取得中…",
+        ready: "コンテンツを取得しました",
+        error: "取得に失敗しました",
+      },
+    },
+    info: {
+      title: "ノートの詳細",
+      type: "種類",
+      types: {
+        text: "テキスト",
+        url: "URL",
+      },
+      urlStatus: "URLステータス",
+      tags: "タグ",
+      created: "作成日時",
+      updated: "更新日時",
+      viewExtractedText: "抽出テキストを表示",
+      sourceInfo: "ソース情報",
+      source: {
+        title: "ソースのメタデータ",
+        description: "ページから抽出されたメタデータ。",
+      },
+      extractedText: {
+        title: "抽出テキスト",
+        description: "ページの内容から抽出されたプレーンテキスト。",
+        empty: "テキストは抽出されませんでした。",
+      },
     },
     trash: {
       toggle: "ゴミ箱",
@@ -183,6 +211,19 @@ export default {
       uploading: "アップロード中",
       processing: "処理中",
       error: "エラー",
+      description: {
+        uploading: "アップロード中",
+        processing: "テキストを抽出中…",
+        ready: "テキストを抽出し検索可能",
+        error: "テキスト抽出に失敗しました",
+      },
+    },
+    info: {
+      title: "ファイルの詳細",
+      size: "サイズ",
+      mimeType: "種類",
+      uploaded: "アップロード日時",
+      updated: "更新日時",
     },
     sort: {
       createdAt: "アップロード日時",
@@ -230,6 +271,12 @@ export default {
         description: "APIキーを再生成すると、現在のキーは無効になります。",
         refresh: "再生成",
         refreshed: "APIキーを再生成しました",
+        reveal: {
+          title: "新しいAPIキー",
+          description:
+            "今すぐコピーしてください。セキュリティのためハッシュ化して保存され、二度と表示されません。",
+          close: "完了",
+        },
       },
       password: {
         title: "パスワード変更",
@@ -329,5 +376,7 @@ export default {
     delete: "削除",
     open: "開く",
     openInNewTab: "新しいタブで開く",
+    additionalInfo: "詳細情報",
+    source: "ソース",
   },
 }

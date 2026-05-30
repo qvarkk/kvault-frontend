@@ -9,13 +9,14 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function login(payload: LoginPayload) {
     const response = await http.post<User>("/auth/login", payload)
-    localStorage.setItem("token", response.data.apiKey)
+    // login rotates the key and returns the fresh one — persist it as the token.
+    if (response.data.apiKey) localStorage.setItem("token", response.data.apiKey)
     user.value = response.data
   }
 
   async function signup(payload: SignupPayload) {
     const response = await http.post<User>("/auth/register", payload)
-    localStorage.setItem("token", response.data.apiKey)
+    if (response.data.apiKey) localStorage.setItem("token", response.data.apiKey)
     user.value = response.data
   }
 
