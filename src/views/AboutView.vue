@@ -26,12 +26,12 @@ const repos = [
   {
     name: "qvarkk/kvault-frontend",
     description: "Vue 3 + Vite + TypeScript",
-    url: "https://github.com/qvarkk/kvault-frontend",
+    url: "https://gitverse.ru/qvarkk/kvault-frontend",
   },
   {
     name: "qvarkk/kvault",
     description: "Go + PostgreSQL + Redis",
-    url: "https://github.com/qvarkk/kvault",
+    url: "https://gitverse.ru/qvarkk/kvault",
   },
 ]
 </script>

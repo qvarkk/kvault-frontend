@@ -2,7 +2,7 @@
 import { ref, computed } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
-import { FileText, Download, Trash2, Ellipsis, RotateCcw, ExternalLink, ArrowRight } from "lucide-vue-next"
+import { FileText, Download, Trash2, Ellipsis, RotateCcw, ExternalLink, ArrowRight, Info } from "lucide-vue-next"
 import {
   Card,
   CardHeader,
@@ -11,7 +11,7 @@ import {
   CardFooter,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import FileInfoModal from "@/components/files/FileInfoModal.vue"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -47,6 +47,7 @@ const emit = defineEmits<{
 }>()
 
 const deleteOpen = ref(false)
+const infoOpen = ref(false)
 
 const clickable = computed(() => !props.trash)
 
@@ -62,16 +63,6 @@ function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-const statusVariant: Record<
-  string,
-  "default" | "secondary" | "destructive" | "outline"
-> = {
-  ready: "default",
-  uploading: "secondary",
-  processing: "secondary",
-  error: "destructive",
 }
 </script>
 
@@ -117,6 +108,10 @@ const statusVariant: Record<
               <ArrowRight class="w-4 h-4 mr-2 pointer-events-none" />
               {{ t("common.open") }}
             </DropdownMenuItem>
+            <DropdownMenuItem @click="infoOpen = true">
+              <Info class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("common.additionalInfo") }}
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               @click="emit('download', file.id)"
@@ -135,14 +130,9 @@ const statusVariant: Record<
     </CardHeader>
 
     <CardContent class="p-0 flex flex-col gap-1 pointer-events-none">
-      <div class="flex items-center gap-2">
-        <Badge :variant="statusVariant[file.status]" class="text-xs">
-          {{ t(`files.status.${file.status}`) }}
-        </Badge>
-        <span class="text-xs text-muted-foreground">
-          {{ formatSize(file.size) }}
-        </span>
-      </div>
+      <span class="text-xs text-muted-foreground">
+        {{ formatSize(file.size) }}
+      </span>
     </CardContent>
 
     <CardFooter class="p-0 flex items-center justify-between pointer-events-none">
@@ -173,4 +163,6 @@ const statusVariant: Record<
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
+
+  <FileInfoModal v-model:open="infoOpen" :file="file" />
 </template>

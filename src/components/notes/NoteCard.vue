@@ -28,13 +28,14 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog"
 import { Button } from "../ui/button"
-import { ArrowRight, Ellipsis, ExternalLink, Link2, RefreshCw, RotateCcw, Trash2 } from "lucide-vue-next"
+import { ArrowRight, Ellipsis, ExternalLink, Info, Link2, Loader2, RefreshCw, RotateCcw, TriangleAlert, Trash2 } from "lucide-vue-next"
 import { useI18n } from "vue-i18n"
 import { ref } from "vue"
 import DeleteNoteAlertModal from "./DeleteNoteAlertModal.vue"
+import NoteInfoModal from "./NoteInfoModal.vue"
 import { notesService } from "@/services/notes"
 import { toast } from "vue-sonner"
-import type { ApiError } from "@/types"
+import { toastApiError } from "@/services/apiError"
 
 const { t } = useI18n()
 const router = useRouter()
@@ -52,6 +53,7 @@ const emit = defineEmits<{
 
 const deleteDialogOpen = ref(false)
 const permanentDeleteDialogOpen = ref(false)
+const infoOpen = ref(false)
 
 function handleDeleted(id: string) {
   emit("deleted", id)
@@ -74,12 +76,7 @@ async function handleRefetch() {
     await notesService.refetch(props.note.id)
     toast.success(t("notes.url.refetchStarted"))
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 
@@ -89,12 +86,7 @@ async function handleRestore() {
     emit("restored", props.note.id)
     toast.success(t("notes.trash.restored"))
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 
@@ -105,12 +97,7 @@ async function handlePermanentDelete() {
     toast.success(t("notes.trash.deletedPermanently"))
     permanentDeleteDialogOpen.value = false
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 </script>
@@ -167,6 +154,10 @@ async function handlePermanentDelete() {
               <ArrowRight class="w-4 h-4 mr-2 pointer-events-none" />
               {{ t("common.open") }}
             </DropdownMenuItem>
+            <DropdownMenuItem @click="infoOpen = true">
+              <Info class="w-4 h-4 mr-2 pointer-events-none" />
+              {{ t("common.additionalInfo") }}
+            </DropdownMenuItem>
             <template v-if="note.type === 'url'">
               <DropdownMenuSeparator />
               <DropdownMenuItem v-if="note.sourceUrl" @click="openSourceUrl">
@@ -192,6 +183,18 @@ async function handlePermanentDelete() {
       class="p-0 text-sm text-muted-foreground flex-1 pointer-events-none break-words"
     >
       <template v-if="note.type === 'url'">
+        <div
+          v-if="note.urlStatus && note.urlStatus !== 'ready'"
+          class="flex items-center gap-1 mb-1 text-xs"
+          :class="note.urlStatus === 'error' ? 'text-destructive' : 'text-muted-foreground'"
+        >
+          <Loader2
+            v-if="note.urlStatus === 'pending'"
+            class="w-3 h-3 animate-spin pointer-events-none"
+          />
+          <TriangleAlert v-else class="w-3 h-3 pointer-events-none" />
+          <span>{{ t(`notes.url.status.${note.urlStatus}`) }}</span>
+        </div>
         <p v-if="note.urlMetadata?.siteName" class="font-medium text-foreground">
           {{ note.urlMetadata.siteName }}
         </p>
@@ -228,6 +231,8 @@ async function handlePermanentDelete() {
     :note-id="note.id"
     @deleted="handleDeleted"
   />
+
+  <NoteInfoModal v-model:open="infoOpen" :note="note" />
 
   <AlertDialog v-if="trash" v-model:open="permanentDeleteDialogOpen">
     <AlertDialogContent @click.stop>

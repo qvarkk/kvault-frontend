@@ -5,7 +5,7 @@ import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth"
 import { authService } from "@/services/auth"
 import { toast } from "vue-sonner"
-import type { ApiError } from "@/types"
+import { toastApiError } from "@/services/apiError"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -32,16 +32,16 @@ async function handleRefreshApiKey() {
   refreshLoading.value = true
   try {
     const response = await authService.refreshApiKey()
+    // Rotate silently: the new key becomes the session token. It's stored
+    // hashed server-side and is never shown in the UI (it has no use here —
+    // the SPA authenticates via this token, and Swagger users just log in).
     auth.user = response.data
-    localStorage.setItem("token", response.data.apiKey)
+    if (response.data.apiKey) {
+      localStorage.setItem("token", response.data.apiKey)
+    }
     toast.success(t("settings.account.apiKey.refreshed"))
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   } finally {
     refreshLoading.value = false
   }
@@ -61,12 +61,7 @@ async function handleChangePassword() {
     oldPassword.value = ""
     newPassword.value = ""
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   } finally {
     changePasswordLoading.value = false
   }
@@ -84,12 +79,7 @@ async function handleDeleteAccount() {
     auth.logout()
     router.push({ name: "signUp" })
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   } finally {
     deleteLoading.value = false
   }
@@ -108,21 +98,9 @@ function openDeleteModal() {
       {{ t("settings.account.description") }}
     </DialogDescription>
 
-    <div class="flex items-center justify-between gap-4">
-      <div class="flex flex-col gap-1">
-        <p class="text-sm font-medium">{{ t("settings.account.username") }}</p>
-        <p class="text-xs text-muted-foreground">{{ auth.user?.username }}</p>
-      </div>
-
-      <!-- separator didn't work :( -->
-      <div class="h-10 w-px bg-border"></div>
-
-      <div class="flex flex-col gap-1">
-        <p class="text-sm font-medium">
-          {{ t("settings.account.apiKey.name") }}
-        </p>
-        <p class="text-xs text-muted-foreground">{{ auth.user?.apiKey }}</p>
-      </div>
+    <div class="flex flex-col gap-1">
+      <p class="text-sm font-medium">{{ t("settings.account.username") }}</p>
+      <p class="text-xs text-muted-foreground">{{ auth.user?.username }}</p>
     </div>
 
     <Separator />

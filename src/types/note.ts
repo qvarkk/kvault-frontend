@@ -2,6 +2,8 @@ import type { TagRef } from "./tag"
 
 export type NoteType = "text" | "url"
 
+export type UrlStatus = "pending" | "ready" | "error"
+
 export interface UrlMetadata {
   title: string
   description: string
@@ -16,6 +18,7 @@ export interface Note {
   content: string
   type: NoteType
   sourceUrl?: string
+  urlStatus?: UrlStatus
   urlMetadata?: UrlMetadata
   extractedContent?: string
   tags: TagRef[]

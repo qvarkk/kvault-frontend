@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n"
 import { notesService } from "@/services/notes"
 import type { ApiError } from "@/types"
 import { toast } from "vue-sonner"
+import { toastApiError } from "@/services/apiError"
 import {
   Dialog,
   DialogContent,
@@ -56,12 +57,7 @@ async function handleCreate() {
     open.value = false
     router.push({ name: "note", params: { id: response.data.id } })
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   } finally {
     loading.value = false
   }

@@ -115,6 +115,34 @@ export default {
       refetchStarted: "Started refetching process in the background",
       source: "URL",
       description: "Description",
+      status: {
+        pending: "Fetching content…",
+        ready: "Content fetched",
+        error: "Fetch failed",
+      },
+    },
+    info: {
+      title: "Note details",
+      type: "Type",
+      types: {
+        text: "Text",
+        url: "URL",
+      },
+      urlStatus: "URL status",
+      tags: "Tags",
+      created: "Created",
+      updated: "Updated",
+      viewExtractedText: "View extracted text",
+      sourceInfo: "Source info",
+      source: {
+        title: "Source metadata",
+        description: "Metadata extracted from the page.",
+      },
+      extractedText: {
+        title: "Extracted text",
+        description: "Plain text extracted from the page content.",
+        empty: "No text was extracted.",
+      },
     },
     trash: {
       toggle: "Trash",
@@ -182,6 +210,19 @@ export default {
       uploading: "Uploading",
       processing: "Processing",
       error: "Error",
+      description: {
+        uploading: "Upload in progress",
+        processing: "Extracting text…",
+        ready: "Text extracted and searchable",
+        error: "Text extraction failed",
+      },
+    },
+    info: {
+      title: "File details",
+      size: "Size",
+      mimeType: "Type",
+      uploaded: "Uploaded",
+      updated: "Updated",
     },
     sort: {
       createdAt: "Date uploaded",
@@ -229,6 +270,12 @@ export default {
         description: "Refreshing your API key will invalidate the current one.",
         refresh: "Refresh",
         refreshed: "API key refreshed",
+        reveal: {
+          title: "Your new API key",
+          description:
+            "Copy it now — for security it is stored hashed and will never be shown again.",
+          close: "Done",
+        },
       },
       password: {
         title: "Change Password",
@@ -328,5 +375,7 @@ export default {
     delete: "Delete",
     open: "Open",
     openInNewTab: "Open in new tab",
+    additionalInfo: "Additional info",
+    source: "Source",
   },
 }

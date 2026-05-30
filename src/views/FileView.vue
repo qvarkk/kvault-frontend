@@ -4,11 +4,30 @@ import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { filesService } from "@/services/files"
 import { toast } from "vue-sonner"
-import type { ApiError, PresignedUrl } from "@/types"
+import { toastApiError } from "@/services/apiError"
+import type { ApiError, File, PresignedUrl } from "@/types"
 import AppLayout from "@/components/layout/AppLayout.vue"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ArrowLeft, Download, RefreshCw, Sticker } from "lucide-vue-next"
+import { ArrowLeft, Download, Ellipsis, Info, RefreshCw, Sticker, Trash2 } from "lucide-vue-next"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import FileInfoModal from "@/components/files/FileInfoModal.vue"
 import { useHead } from "@vueuse/head"
 
 const props = defineProps<{
@@ -22,6 +41,9 @@ const loading = ref(true)
 const error = ref<ApiError | null>(null)
 const viewData = ref<PresignedUrl | null>(null)
 const blobUrl = ref<string | null>(null)
+const fileInfo = ref<File | null>(null)
+const infoOpen = ref(false)
+const deleteOpen = ref(false)
 
 useHead({ title: computed(() => viewData.value?.filename ?? t("head.file")) })
 
@@ -72,16 +94,39 @@ async function fetchViewUrl() {
   }
 }
 
+async function fetchInfo() {
+  try {
+    const { data } = await filesService.getInfo(props.id)
+    fileInfo.value = data
+  } catch {
+    // Non-fatal: the viewer still works without the metadata panel.
+    fileInfo.value = null
+  }
+}
+
 async function handleDownload() {
   try {
     const response = await filesService.getDownloadUrl(props.id)
     window.open(response.data.url, "_blank")
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    toastApiError(e)
   }
 }
 
-onMounted(fetchViewUrl)
+async function handleDelete() {
+  try {
+    await filesService.remove(props.id)
+    toast.success(t("files.delete.deleted"))
+    router.push({ name: "files" })
+  } catch (e) {
+    toastApiError(e)
+  }
+}
+
+onMounted(() => {
+  fetchViewUrl()
+  fetchInfo()
+})
 onUnmounted(revokeBlobUrl)
 </script>
 
@@ -129,12 +174,58 @@ onUnmounted(revokeBlobUrl)
           {{ viewData.filename }}
         </span>
 
-        <Button variant="outline" size="icon" @click="handleDownload">
-          <Download class="w-4 h-4 pointer-events-none" />
-        </Button>
+        <div class="flex items-center gap-2">
+          <Button variant="outline" size="icon" @click="handleDownload">
+            <Download class="w-4 h-4 pointer-events-none" />
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="ghost" size="icon">
+                <Ellipsis class="w-4 h-4 pointer-events-none" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem :disabled="!fileInfo" @click="infoOpen = true">
+                <Info class="w-4 h-4 mr-2 pointer-events-none" />
+                {{ t("common.additionalInfo") }}
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="handleDownload">
+                <Download class="w-4 h-4 mr-2 pointer-events-none" />
+                {{ t("files.download") }}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem class="text-destructive" @click="deleteOpen = true">
+                <Trash2 class="w-4 h-4 mr-2 pointer-events-none" />
+                {{ t("common.delete") }}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       <iframe :src="blobUrl" class="flex-1 w-full" frameborder="0" />
     </div>
+
+    <FileInfoModal v-if="fileInfo" v-model:open="infoOpen" :file="fileInfo" />
+
+    <AlertDialog v-model:open="deleteOpen">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{{ t("files.delete.title") }}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {{ t("files.delete.description") }}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{{ t("common.cancel") }}</AlertDialogCancel>
+          <AlertDialogAction
+            class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            @click="handleDelete"
+          >
+            {{ t("common.delete") }}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </AppLayout>
 </template>

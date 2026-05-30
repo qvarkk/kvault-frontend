@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n"
 import { useIntersectionObserver, watchDebounced } from "@vueuse/core"
 import { tagsService } from "@/services/tags"
 import { toast } from "vue-sonner"
+import { toastApiError } from "@/services/apiError"
 import type { Tag, ApiError } from "@/types"
 import {
   Loader2,
@@ -68,7 +69,7 @@ async function handleAdd() {
     newTag.value = ""
     toast.success(t("settings.tags.messages.added"))
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    toastApiError(e)
   } finally {
     addLoading.value = false
   }
@@ -80,7 +81,7 @@ async function handleDelete(id: string) {
     entities.value = entities.value.filter((t) => t.id !== id)
     toast.info(t("settings.tags.messages.deleted"))
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    toastApiError(e)
   }
 }
 
@@ -104,7 +105,7 @@ async function confirmEdit(tag: Tag) {
     tag.name = editingName.value.trim()
     cancelEdit()
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    toastApiError(e)
   }
 }
 

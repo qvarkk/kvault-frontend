@@ -13,6 +13,7 @@ import {
 import { useI18n } from "vue-i18n"
 import { notesService } from "@/services/notes"
 import { toast } from "vue-sonner"
+import { toastApiError } from "@/services/apiError"
 import type { ApiError } from "@/types"
 
 const props = defineProps<{
@@ -36,12 +37,7 @@ async function confirmDelete() {
     toast.success(t("notes.delete.deleted"))
     open.value = false
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   } finally {
     deleteLoading.value = false
   }

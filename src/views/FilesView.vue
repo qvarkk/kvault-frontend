@@ -9,6 +9,7 @@ import {
 import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
 import { filesService } from "@/services/files"
 import { toast } from "vue-sonner"
+import { toastApiError } from "@/services/apiError"
 import type { ApiError, UploadItem, File } from "@/types"
 import { Check, FileIcon, Files, RefreshCw, Trash2, X } from "lucide-vue-next"
 import { Button } from "@/components/ui/button"
@@ -150,7 +151,7 @@ async function handleDownload(id: string) {
     const response = await filesService.getDownloadUrl(id)
     window.open(response.data.url, "_blank")
   } catch (e) {
-    toast.error((e as ApiError).detail)
+    toastApiError(e)
   }
 }
 
@@ -165,12 +166,7 @@ async function handleDelete(id: string) {
     }
     entities.value = entities.value.filter((f) => f.id !== id)
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 
@@ -180,12 +176,7 @@ async function handleRestore(id: string) {
     entities.value = entities.value.filter((f) => f.id !== id)
     toast.success(t("files.trash.restored"))
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 
@@ -196,12 +187,7 @@ async function handleEmptyTrash() {
     emptyTrashDialogOpen.value = false
     await loadFiles()
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 

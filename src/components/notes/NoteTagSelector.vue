@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/popover"
 import type { ApiError, Tag } from "@/types"
 import { toast } from "vue-sonner"
+import { toastApiError } from "@/services/apiError"
 import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
 import { Spinner } from "../ui/spinner"
 
@@ -51,12 +52,7 @@ async function handleCreate() {
     search.value = ""
     await fetch()
   } catch (e) {
-    if (e && typeof e === "object" && "detail" in e)
-      toast.error((e as ApiError).detail)
-    else
-      toast.error(t("errors.internal.title"), {
-        description: t("errors.internal.detail"),
-      })
+    toastApiError(e)
   }
 }
 
