@@ -7,6 +7,7 @@ import {
   LogOut,
   NotebookPen,
   PanelLeft,
+  Search,
   Settings,
   X,
 } from "lucide-vue-next"
@@ -35,7 +36,9 @@ import {
 } from "../ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "../ui/avatar"
 import { computed, ref, type FunctionalComponent } from "vue"
+import { onKeyStroke } from "@vueuse/core"
 import SettingsModal from "../settings/SettingsModal.vue"
+import SearchPalette from "../search/SearchPalette.vue"
 
 interface sidebarItem {
   name: string
@@ -49,6 +52,19 @@ const auth = useAuthStore()
 const { state, isMobile, openMobile, toggleSidebar } = useSidebar()
 
 const settingsOpen = ref(false)
+const searchOpen = ref(false)
+
+function openSearch() {
+  if (isMobile.value) toggleSidebar()
+  searchOpen.value = true
+}
+
+onKeyStroke(["k", "K"], (e) => {
+  if (e.metaKey || e.ctrlKey) {
+    e.preventDefault()
+    searchOpen.value = true
+  }
+})
 
 const isExpanded = computed(() =>
   isMobile.value ? openMobile.value : state.value === "expanded",
@@ -77,8 +93,8 @@ const sidebarItems: sidebarItem[] = [
   },
 ]
 
-function logout() {
-  auth.logout()
+async function logout() {
+  await auth.logout()
   router.push({ name: "login" })
 }
 
@@ -110,6 +126,15 @@ function openSettings() {
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                @click="openSearch"
+                :tooltip="t('nav.search')"
+              >
+                <Search class="pointer-events-none" />
+                <span class="pointer-events-none">{{ t("nav.search") }}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             <SidebarMenuItem v-for="item in sidebarItems">
               <SidebarMenuButton
                 @click="router.push({ name: item.routeName })"
@@ -180,4 +205,5 @@ function openSettings() {
     </SidebarFooter>
   </Sidebar>
   <SettingsModal v-model:open="settingsOpen" />
+  <SearchPalette v-model:open="searchOpen" />
 </template>

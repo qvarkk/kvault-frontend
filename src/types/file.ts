@@ -8,6 +8,7 @@ export interface File {
   size: number
   mimeType: string
   status: FileStatus
+  textContent?: string
   createdAt: string
   updatedAt: string
 }

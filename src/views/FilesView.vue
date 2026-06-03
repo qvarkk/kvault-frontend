@@ -7,6 +7,7 @@ import {
   useDropZone,
 } from "@vueuse/core"
 import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
+import { safeUuid } from "@/lib/utils"
 import { filesService } from "@/services/files"
 import { toast } from "vue-sonner"
 import { toastApiError } from "@/services/apiError"
@@ -88,7 +89,7 @@ function cancelUpload(itemId: string) {
 
 async function uploadFile(file: globalThis.File) {
   const item = reactive<UploadItem>({
-    id: crypto.randomUUID(),
+    id: safeUuid(),
     name: file.name,
     progress: 0,
     status: "uploading",

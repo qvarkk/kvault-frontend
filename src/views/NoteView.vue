@@ -14,8 +14,8 @@ import {
   ArrowLeft,
   Check,
   Ellipsis,
+  ExternalLink,
   Info,
-  Link2,
   Link as LinkIcon,
   Loader2,
   RefreshCw,
@@ -345,7 +345,7 @@ useHead({ title: computed(() => note.value?.title ?? t("head.note")) })
           size="icon"
           @click="openSourceUrl"
         >
-          <Link2 class="w-4 h-4 pointer-events-none" />
+          <ExternalLink class="w-4 h-4 pointer-events-none" />
         </Button>
         <Button
           variant="ghost"
@@ -369,9 +369,6 @@ useHead({ title: computed(() => note.value?.title ?? t("head.note")) })
           {{ note.urlMetadata.siteName }}
         </span>
         <span v-if="note.urlMetadata.title">{{ note.urlMetadata.title }}</span>
-        <span v-if="note.urlMetadata.description" class="text-xs">
-          {{ note.urlMetadata.description }}
-        </span>
       </div>
 
       <div class="flex items-center gap-2 py-2 flex-wrap">

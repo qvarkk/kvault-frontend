@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import type { File } from "@/types"
 import {
@@ -7,8 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { FileText } from "lucide-vue-next"
+import ExtractedTextModal from "@/components/notes/ExtractedTextModal.vue"
 import { formatBytes, formatDateTime, timeAgo } from "@/services/format"
 
 const props = defineProps<{
@@ -18,6 +23,8 @@ const props = defineProps<{
 const open = defineModel<boolean>("open", { default: false })
 
 const { t } = useI18n()
+
+const extractedTextOpen = ref(false)
 
 const statusVariant: Record<string, "default" | "secondary" | "destructive"> = {
   ready: "default",
@@ -29,9 +36,11 @@ const statusVariant: Record<string, "default" | "secondary" | "destructive"> = {
 
 <template>
   <Dialog v-model:open="open">
-    <DialogContent class="max-w-md">
-      <DialogHeader>
-        <DialogTitle class="truncate">{{ file.originalName }}</DialogTitle>
+    <DialogContent class="w-[calc(100vw-1rem)] max-w-md">
+      <DialogHeader class="min-w-0">
+        <DialogTitle class="min-w-0 break-all pr-6">
+          {{ file.originalName }}
+        </DialogTitle>
         <DialogDescription class="hidden">
           {{ t("files.info.title") }}
         </DialogDescription>
@@ -50,7 +59,11 @@ const statusVariant: Record<string, "default" | "secondary" | "destructive"> = {
             {{ t(`files.status.${file.status}`) }}
           </Badge>
           <p class="text-xs text-muted-foreground">
-            {{ t(`files.status.description.${file.status}`) }}
+            {{
+              file.status === "ready" && !file.textContent
+                ? t("files.status.description.readyNoText")
+                : t(`files.status.description.${file.status}`)
+            }}
           </p>
         </div>
 
@@ -81,6 +94,15 @@ const statusVariant: Record<string, "default" | "secondary" | "destructive"> = {
           </div>
         </dl>
       </div>
+
+      <DialogFooter v-if="file.textContent">
+        <Button variant="outline" class="w-full" @click="extractedTextOpen = true">
+          <FileText class="w-4 h-4 mr-2 pointer-events-none" />
+          {{ t("files.info.viewExtractedText") }}
+        </Button>
+      </DialogFooter>
     </DialogContent>
   </Dialog>
+
+  <ExtractedTextModal v-model:open="extractedTextOpen" :text="file.textContent" />
 </template>

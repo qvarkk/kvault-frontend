@@ -36,7 +36,7 @@ const urlStatusVariant: Record<string, "default" | "secondary" | "destructive"> 
 
 <template>
   <Dialog v-model:open="open">
-    <DialogContent class="max-w-md">
+    <DialogContent class="w-[calc(100vw-1rem)] max-w-md">
       <DialogHeader>
         <DialogTitle>{{ t("notes.info.title") }}</DialogTitle>
         <DialogDescription class="hidden">

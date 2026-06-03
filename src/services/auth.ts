@@ -1,9 +1,25 @@
 import http from "./http"
-import type { User } from "@/types"
+import type { ApiKey, Listed } from "@/types"
 
 export const authService = {
-  refreshApiKey() {
-    return http.post<User>("/auth/refresh")
+  listKeys() {
+    return http.get<Listed<ApiKey>>("/auth/keys")
+  },
+
+  renameKey(id: string, label: string) {
+    return http.patch(`/auth/keys/${id}`, { label })
+  },
+
+  deleteKey(id: string) {
+    return http.delete(`/auth/keys/${id}`)
+  },
+
+  logout() {
+    return http.post("/auth/logout")
+  },
+
+  logoutOthers() {
+    return http.post("/auth/logout-others")
   },
 
   updatePassword(oldPassword: string, newPassword: string) {

@@ -20,7 +20,7 @@ const { t } = useI18n()
 
 <template>
   <Dialog v-model:open="open">
-    <DialogScrollContent class="max-w-2xl">
+    <DialogScrollContent class="w-[calc(100vw-1rem)] max-w-2xl">
       <DialogHeader>
         <DialogTitle>{{ t("notes.info.extractedText.title") }}</DialogTitle>
         <DialogDescription>

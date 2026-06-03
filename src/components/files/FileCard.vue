@@ -75,7 +75,7 @@ function formatSize(bytes: number): string {
     @auxclick.middle="clickable && openFileInNewTab()"
   >
     <CardHeader class="p-0 flex flex-row items-start justify-between pointer-events-none">
-      <div class="flex items-center gap-2 min-w-0">
+      <div class="flex items-center gap-2 min-w-0 flex-1">
         <FileText
           class="w-4 h-4 shrink-0 text-muted-foreground pointer-events-none"
         />
@@ -83,7 +83,7 @@ function formatSize(bytes: number): string {
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger as-child @click.stop>
-          <Button variant="ghost" size="icon" class="w-6 h-6 shrink-0 pointer-events-auto">
+          <Button variant="ghost" size="icon" class="w-6 h-6 shrink-0 -mt-1 -mr-1 pointer-events-auto">
             <Ellipsis class="w-4 h-4 pointer-events-none" />
           </Button>
         </DropdownMenuTrigger>

@@ -40,7 +40,7 @@ const frontmatter = computed(() => {
 
 <template>
   <Dialog v-model:open="open">
-    <DialogScrollContent class="max-w-xl">
+    <DialogScrollContent class="w-[calc(100vw-1rem)] max-w-xl">
       <DialogHeader>
         <DialogTitle>{{ t("notes.info.source.title") }}</DialogTitle>
         <DialogDescription>

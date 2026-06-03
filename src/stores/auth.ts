@@ -1,4 +1,5 @@
 import http from "@/services/http"
+import { authService } from "@/services/auth"
 import type { User, LoginPayload, SignupPayload } from "@/types"
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
@@ -20,7 +21,13 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = response.data
   }
 
-  function logout() {
+  async function logout() {
+    // Revoke the current key server-side; clear locally regardless of outcome.
+    try {
+      await authService.logout()
+    } catch {
+      // Token may already be invalid — still clear the client session.
+    }
     localStorage.removeItem("token")
     user.value = null
   }

@@ -5,10 +5,8 @@
   "compilerOptions": {
     // Extra safety for array and object lookups, but may have false positives.
     "noUncheckedIndexedAccess": true,
-    // shadcn
-    "ignoreDeprecations": "5.0",
-    "baseUrl": ".",
-    // Path mapping for cleaner imports.
+    // Path mapping for cleaner imports. Resolved relative to this config file
+    // (no baseUrl needed since TS 4.1 — baseUrl is deprecated in TS 7.0).
     "paths": {
       "@/*": ["./src/*"]
     },

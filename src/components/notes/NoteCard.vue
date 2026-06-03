@@ -28,7 +28,7 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog"
 import { Button } from "../ui/button"
-import { ArrowRight, Ellipsis, ExternalLink, Info, Link2, Loader2, RefreshCw, RotateCcw, TriangleAlert, Trash2 } from "lucide-vue-next"
+import { ArrowRight, Ellipsis, ExternalLink, Info, Loader2, RefreshCw, RotateCcw, TriangleAlert, Trash2 } from "lucide-vue-next"
 import { useI18n } from "vue-i18n"
 import { ref } from "vue"
 import DeleteNoteAlertModal from "./DeleteNoteAlertModal.vue"
@@ -161,7 +161,7 @@ async function handlePermanentDelete() {
             <template v-if="note.type === 'url'">
               <DropdownMenuSeparator />
               <DropdownMenuItem v-if="note.sourceUrl" @click="openSourceUrl">
-                <Link2 class="w-4 h-4 mr-2 pointer-events-none" />
+                <ExternalLink class="w-4 h-4 mr-2 pointer-events-none" />
                 {{ t("notes.url.openUrl") }}
               </DropdownMenuItem>
               <DropdownMenuItem @click="handleRefetch">
@@ -199,7 +199,7 @@ async function handlePermanentDelete() {
           {{ note.urlMetadata.siteName }}
         </p>
         <p v-if="note.sourceUrl">{{ t("notes.url.source") }}: {{ note.sourceUrl }}</p>
-        <p v-if="note.urlMetadata?.description">{{ t("notes.url.description") }}: {{ note.urlMetadata.description.slice(0, 100) + (note.urlMetadata.description.length > 100 ? "..." : "") }}</p>
+        <p v-if="note.content">{{ note.content.slice(0, 50) + (note.content.length > 50 ? "..." : "") }}</p>
       </template>
       <template v-else>
         {{ note.content.slice(0, 100) + (note.content.length > 100 ? "..." : "") }}
