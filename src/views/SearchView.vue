@@ -4,21 +4,14 @@ import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useIntersectionObserver, watchDebounced } from "@vueuse/core"
 import { useHead } from "@vueuse/head"
-import {
-  ArrowDown,
-  ArrowUp,
-  Files,
-  NotebookPen,
-  RefreshCw,
-  SearchIcon,
-} from "lucide-vue-next"
+import { Files, NotebookPen, RefreshCw, SearchIcon } from "lucide-vue-next"
 import AppLayout from "@/components/layout/AppLayout.vue"
 import NoteCard from "@/components/notes/NoteCard.vue"
 import FileCard from "@/components/files/FileCard.vue"
 import NoteSkeleton from "@/components/notes/NoteSkeleton.vue"
 import TagFilter from "@/components/notes/TagFilter.vue"
+import SortControl from "@/components/common/SortControl.vue"
 import { Button } from "@/components/ui/button"
-import { ButtonGroup } from "@/components/ui/button-group"
 import { Spinner } from "@/components/ui/spinner"
 import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -27,13 +20,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { useInfiniteEntities } from "@/composables/useInfiniteEntities"
 import { useSearchHistory } from "@/composables/useSearchHistory"
 import { notesService } from "@/services/notes"
@@ -67,6 +53,18 @@ const filesSentinel = ref<HTMLElement | null>(null)
 const notes = useInfiniteEntities<Note>(notesService)
 const files = useInfiniteEntities<File>(filesService)
 
+const noteSortOptions = computed(() => [
+  { value: "updated_at", label: t("notes.sort.updatedAt") },
+  { value: "created_at", label: t("notes.sort.createdAt") },
+  { value: "title", label: t("notes.sort.title") },
+])
+
+const fileSortOptions = computed(() => [
+  { value: "created_at", label: t("files.sort.createdAt") },
+  { value: "original_name", label: t("files.sort.name") },
+  { value: "size", label: t("files.sort.size") },
+])
+
 const noteParams = computed(() => ({
   q: query.value,
   sort_by: noteSortBy.value,
@@ -97,14 +95,6 @@ function loadAll() {
 
 function syncUrl() {
   router.replace({ query: query.value ? { q: query.value } : {} })
-}
-
-function toggleNoteOrder() {
-  noteOrderBy.value = noteOrderBy.value === "DESC" ? "ASC" : "DESC"
-}
-
-function toggleFileOrder() {
-  fileOrderBy.value = fileOrderBy.value === "DESC" ? "ASC" : "DESC"
 }
 
 function handleNoteRemoved(id: string) {
@@ -178,28 +168,11 @@ onMounted(() => {
         </div>
 
         <div class="flex items-center gap-2 md:gap-4">
-          <ButtonGroup class="flex flex-1">
-            <Button variant="outline" size="icon" @click="toggleNoteOrder">
-              <ArrowUp v-if="noteOrderBy === 'ASC'" class="w-4 h-4" />
-              <ArrowDown v-else class="w-4 h-4" />
-            </Button>
-            <Select v-model:model-value="noteSortBy">
-              <SelectTrigger class="flex-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="updated_at">
-                  {{ t("notes.sort.updatedAt") }}
-                </SelectItem>
-                <SelectItem value="created_at">
-                  {{ t("notes.sort.createdAt") }}
-                </SelectItem>
-                <SelectItem value="title">
-                  {{ t("notes.sort.title") }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </ButtonGroup>
+          <SortControl
+            v-model:sort-by="noteSortBy"
+            v-model:order-by="noteOrderBy"
+            :options="noteSortOptions"
+          />
           <div class="flex-1">
             <TagFilter v-model:tag-ids="tagIds" />
           </div>
@@ -254,26 +227,11 @@ onMounted(() => {
         </div>
 
         <div class="flex items-center gap-2">
-          <ButtonGroup class="flex flex-1">
-            <Button variant="outline" size="icon" @click="toggleFileOrder">
-              <ArrowUp v-if="fileOrderBy === 'ASC'" class="w-4 h-4" />
-              <ArrowDown v-else class="w-4 h-4" />
-            </Button>
-            <Select v-model:model-value="fileSortBy">
-              <SelectTrigger class="flex-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="created_at">
-                  {{ t("files.sort.createdAt") }}
-                </SelectItem>
-                <SelectItem value="original_name">
-                  {{ t("files.sort.name") }}
-                </SelectItem>
-                <SelectItem value="size">{{ t("files.sort.size") }}</SelectItem>
-              </SelectContent>
-            </Select>
-          </ButtonGroup>
+          <SortControl
+            v-model:sort-by="fileSortBy"
+            v-model:order-by="fileOrderBy"
+            :options="fileSortOptions"
+          />
         </div>
 
         <div

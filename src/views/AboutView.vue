@@ -68,7 +68,7 @@ const repos = [
             <p class="text-xs text-muted-foreground">
               {{ t("about.details.version") }}
             </p>
-            <p class="text-sm font-medium">0.3.0 — alpha</p>
+            <p class="text-sm font-medium">v0.3.1</p>
           </div>
           <div class="bg-secondary rounded-md p-3 flex flex-col gap-1">
             <p class="text-xs text-muted-foreground">

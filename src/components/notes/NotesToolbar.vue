@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import { ArrowDown, ArrowUp, SearchIcon } from "lucide-vue-next"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select"
-import { Button } from "../ui/button"
+import { computed } from "vue"
+import { SearchIcon } from "lucide-vue-next"
 import { useI18n } from "vue-i18n"
 import TagFilter from "./TagFilter.vue"
-import { ButtonGroup } from "../ui/button-group"
+import SortControl from "../common/SortControl.vue"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import { Spinner } from "../ui/spinner"
 
@@ -22,9 +15,11 @@ const orderBy = defineModel<string>("orderBy", { default: "" })
 const tagIds = defineModel<string[]>("tagIds", { default: [] })
 const loading = defineModel<boolean>("loading", { default: false })
 
-function toggleOrder() {
-  orderBy.value = orderBy.value === "DESC" ? "ASC" : "DESC"
-}
+const sortOptions = computed(() => [
+  { value: "updated_at", label: t("notes.sort.updatedAt") },
+  { value: "created_at", label: t("notes.sort.createdAt") },
+  { value: "title", label: t("notes.sort.title") },
+])
 </script>
 
 <template>
@@ -40,27 +35,11 @@ function toggleOrder() {
     </InputGroup>
 
     <div class="flex items-center gap-2 md:gap-4">
-      <ButtonGroup class="flex flex-1">
-        <Button variant="outline" size="icon" @click="toggleOrder">
-          <ArrowUp v-if="orderBy === 'ASC'" class="w-4 h-4" />
-          <ArrowDown v-else class="w-4 h-4" />
-        </Button>
-
-        <Select v-model:model-value="sortBy">
-          <SelectTrigger class="flex-1">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="updated_at">
-              {{ t("notes.sort.updatedAt") }}
-            </SelectItem>
-            <SelectItem value="created_at">
-              {{ t("notes.sort.createdAt") }}
-            </SelectItem>
-            <SelectItem value="title">{{ t("notes.sort.title") }}</SelectItem>
-          </SelectContent>
-        </Select>
-      </ButtonGroup>
+      <SortControl
+        v-model:sort-by="sortBy"
+        v-model:order-by="orderBy"
+        :options="sortOptions"
+      />
 
       <div class="flex-1">
         <TagFilter v-model:tag-ids="tagIds" />

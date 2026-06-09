@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { ArrowDown, ArrowUp, SearchIcon, Upload } from "lucide-vue-next"
+import { computed } from "vue"
+import { SearchIcon, Upload } from "lucide-vue-next"
+import { useI18n } from "vue-i18n"
+import SortControl from "../common/SortControl.vue"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import { Spinner } from "../ui/spinner"
-import { ButtonGroup } from "../ui/button-group"
 import { Button } from "../ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select"
-import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
 
@@ -28,9 +22,11 @@ const emits = defineEmits<{
   uploadClick: []
 }>()
 
-function toggleOrder() {
-  orderBy.value = orderBy.value === "DESC" ? "ASC" : "DESC"
-}
+const sortOptions = computed(() => [
+  { value: "created_at", label: t("files.sort.createdAt") },
+  { value: "original_name", label: t("files.sort.name") },
+  { value: "size", label: t("files.sort.size") },
+])
 </script>
 
 <template>
@@ -46,29 +42,11 @@ function toggleOrder() {
     </InputGroup>
 
     <div class="flex items-center gap-2">
-      <ButtonGroup class="flex flex-1">
-        <Button variant="outline" size="icon" @click="toggleOrder">
-          <ArrowUp
-            v-if="orderBy === 'ASC'"
-            class="w-4 h-4 pointer-events-none"
-          />
-          <ArrowDown v-else class="w-4 h-4 pointer-events-none" />
-        </Button>
-        <Select v-model="sortBy">
-          <SelectTrigger class="flex-1">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="created_at">
-              {{ t("files.sort.createdAt") }}
-            </SelectItem>
-            <SelectItem value="original_name">
-              {{ t("files.sort.name") }}
-            </SelectItem>
-            <SelectItem value="size">{{ t("files.sort.size") }}</SelectItem>
-          </SelectContent>
-        </Select>
-      </ButtonGroup>
+      <SortControl
+        v-model:sort-by="sortBy"
+        v-model:order-by="orderBy"
+        :options="sortOptions"
+      />
       <Button v-if="!trash" @click="emits('uploadClick')">
         <Upload class="w-4 h-4 mr-2 pointer-events-none" />
         {{ t("common.upload") }}

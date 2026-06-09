@@ -70,7 +70,9 @@ const isExpanded = computed(() =>
   isMobile.value ? openMobile.value : state.value === "expanded",
 )
 
-const sidebarItems: sidebarItem[] = [
+// Computed so labels re-translate when the locale changes; a plain array
+// would freeze the strings at setup time.
+const sidebarItems = computed<sidebarItem[]>(() => [
   {
     name: t("nav.home"),
     routeName: "home",
@@ -91,7 +93,7 @@ const sidebarItems: sidebarItem[] = [
     routeName: "about",
     iconComponent: Info,
   },
-]
+])
 
 async function logout() {
   await auth.logout()

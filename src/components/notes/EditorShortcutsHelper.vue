@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 import { CircleHelp } from "lucide-vue-next"
 import { Button } from "@/components/ui/button"
@@ -14,7 +15,8 @@ import { toast } from "vue-sonner"
 const { t } = useI18n()
 const { isHidden, hide, show } = useEditorShortcuts()
 
-const shortcuts = [
+// Computed so labels re-translate on locale change.
+const shortcuts = computed(() => [
   { keys: ["Ctrl", "B"], action: t("shortcuts.actions.bold") },
   { keys: ["Ctrl", "I"], action: t("shortcuts.actions.italic") },
   { keys: ["Ctrl", "U"], action: t("shortcuts.actions.underline") },
@@ -26,7 +28,7 @@ const shortcuts = [
   { keys: ["Ctrl", "⇧", "U"], action: t("shortcuts.actions.ul") },
   { keys: ["Ctrl", "O"], action: t("shortcuts.actions.ol") },
   { keys: ["Ctrl", "L"], action: t("shortcuts.actions.link") },
-]
+])
 
 function handleHide() {
   hide()
